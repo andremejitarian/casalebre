@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscrição em cursos de artes | Casa Lebre</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Banner superior -->
+    <div class="banner-top"></div>
+    
+    <div class="main-container">
+        <!-- Logo circular que "salta" do card -->
+        <div class="logo-circle">
+            <img src="images/logo.png" alt="Logo Casa Lebre">
+        </div>
+        
+        <div class="form-card form-container">
+            <form id="registrationForm">
+                <!-- Campo oculto para matrícula -->
+                <input type="hidden" id="matricula" name="matricula" value="">
+                <input type="hidden" id="valor_calculado_total" name="valor_calculado_total" value="">
+
+                <!-- ETAPA 1: Boas-vindas -->
+                <div class="form-step" id="step-1">
+                    <div class="form-header">
+                        <h1 class="form-title">Inscrição em cursos de artes</h1>
+                        <p class="form-description">Bem-vindo à Casa Lebre! Preencha o formulário para se inscrever nos cursos de artes. Se você é associado do programa Amigo Lebre, seu desconto será aplicado automaticamente após a consulta do CPF.</p>
+                    </div>
+                    <div class="form-navigation">
+                        <button type="button" class="btn btn-next">Avançar</button>
+                    </div>
+                </div>
+
+                <!-- ETAPA 2: Dados do Aprendiz -->
+                        <!-- Campo de endereço removido conforme PRD -->
+                        
+                            <input type="text" id="nomeAprendiz" name="nomeAprendiz" required>
+                            <div class="error-message">Este campo é obrigatório</div>
+                            <label>Como ficou sabendo da Casa Lebre? *</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="cpfAprendiz">CPF *</label>
+                            <input type="text" id="cpfAprendiz" name="cpfAprendiz" class="mask-cpf" required>
+                            <div class="error-message">CPF inválido</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="emailAprendiz">E-mail *</label>
+                            <input type="email" id="emailAprendiz" name="emailAprendiz" required>
+                            <div class="error-message">E-mail inválido</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefoneAprendiz">Telefone/WhatsApp *</label>
+                            <input type="tel" id="telefoneAprendiz" name="telefoneAprendiz" class="mask-phone" required>
+                            <div class="error-message">Telefone inválido</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="enderecoAprendiz">Endereço Completo</label>
+                            <textarea id="enderecoAprendiz" name="enderecoAprendiz" rows="3" placeholder="Rua, número, bairro, cidade, CEP"></textarea>
+                            <div class="error-message">Este campo é obrigatório</div>
+                        </div>
+                    </div>
+                    <div class="form-navigation">
+                        <button type="button" class="btn btn-prev">Voltar</button>
+                        <button type="button" class="btn btn-next">Avançar</button>
+                    </div>
+                </div>
+
+                <!-- ETAPA 3: Seleção de Cursos -->
+                <div class="form-step" id="step-3">
+                    <h2 class="step-title">Seleção de Cursos</h2>
+                    <div class="form-fields" id="cursosContainer">
+                        <!-- Cursos serão populados via JS -->
+                    </div>
+                    <div class="form-navigation">
+                        <button type="button" class="btn btn-prev">Voltar</button>
+                        <button type="button" class="btn btn-next">Avançar</button>
+                    </div>
+                </div>
+
+                <!-- ETAPA 4: Resumo financeiro, cupom, plano, pagamento, termos -->
+                <div class="form-step" id="step-4">
+                    <h2 class="step-title">Resumo e Confirmação</h2>
+                    <div class="summary-section" id="summarySection">
+                        <!-- Resumo será populado via JS -->
+                    </div>
+                    <div class="form-fields">
+                        <div class="form-group">
+                            <label for="planoPagamento">Plano de pagamento</label>
+                            <select id="planoPagamento" required></select>
+                            <div class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="formaPagamento">Forma de pagamento</label>
+                            <select id="formaPagamento" required>
+                                <option value="">Selecione</option>
+                                <option value="Cartão de Crédito">Cartão de Crédito</option>
+                                <option value="PIX/Boleto">PIX/Boleto</option>
+                                <option value="Bolsista Integral">Bolsista Integral</option>
+                            </select>
+                            <div class="error-message"></div>
+                        </div>
+                        <div class="form-group" id="diaVencimentoGroup" style="display:none;">
+                            <label for="diaVencimento">Dia de vencimento (PIX/Boleto)</label>
+                            <select id="diaVencimento">
+                                <option value="">Selecione</option>
+                                <option value="5">Dia 5</option>
+                                <option value="10">Dia 10</option>
+                                <option value="15">Dia 15</option>
+                            </select>
+                            <div class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cupomCode">Cupom de desconto</label>
+                            <input type="text" id="cupomCode">
+                            <div class="cupom-feedback"></div>
+                        </div>
+                        <div class="form-group terms-and-conditions">
+                            <input type="checkbox" id="aceiteTermos" required>
+                            <label for="aceiteTermos">Li e aceito os termos e condições.</label>
+                        </div>
+                    </div>
+                    <div class="form-navigation">
+                        <button type="button" class="btn btn-prev">Voltar</button>
+                        <button type="submit" class="btn btn-submit">Finalizar inscrição</button>
+                    </div>
+                </div>
+
+                <!-- ETAPA 5: Plano de Pagamento e Resumo -->
+                <div class="form-step" id="step-4">
+                    <h2 class="step-title">Plano de Pagamento e Resumo</h2>
+                    
+                    <div class="summary-section">
+                        
+                        <div class="form-group">
+                            <label>Aprendizes e Cursos:</label>
+                            <ul id="summaryApprenticesList">
+                                <!-- Preenchido pelo JavaScript -->
+                            </ul>
+                        </div>
+
+<div class="form-group">
+    <label for="planoPagamento">Plano de Pagamento *</label>
+    <select id="planoPagamento" name="planoPagamento" required>
+        <option value="">Selecione um plano de pagamento</option>
+        <option value="mensal">Mensal</option>
+        <option value="bimestral">Bimestral com desconto</option>
+        <option value="quadrimestral">Quadrimestral com desconto</option>
+    </select>
+    <div class="error-message">Selecione o plano de pagamento</div>
+</div>
+
+                        <div class="form-group">
+                            <label for="formaPagamento">Forma de Pagamento *</label>
+                            <select id="formaPagamento" name="formaPagamento" required>
+                                <option value="">Selecione</option>
+                                <option value="Cartão de Crédito">Cartão de Crédito</option>
+                                <option value="PIX/Boleto">PIX/Boleto</option>
+                                <option value="Bolsista Integral">Bolsista Integral</option>
+                            </select>
+                            <div class="error-message">Selecione a forma de pagamento</div>
+                        </div>
+
+                        <div class="form-group" id="diaVencimentoGroup" style="display: none;">
+                            <label for="diaVencimento">Dia de Vencimento *</label>
+                            <select id="diaVencimento" name="diaVencimento">
+                                <option value="">Selecione</option>
+                                <option value="5">Dia 5</option>
+                                <option value="10">Dia 10</option>
+                                <option value="15">Dia 15</option>
+                            </select>
+                            <div class="error-message">Selecione o dia de vencimento</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cupomCode">Cupom de Desconto (opcional)</label>
+                            <input type="text" id="cupomCode" name="cupomCode" placeholder="Digite seu cupom">
+                            <div class="cupom-feedback"></div>
+                        </div>
+
+                        <div class="price-details">
+                            <p>Subtotal: <span id="summarySubtotal">R\$ 0,00</span></p>
+                            <p>Desconto: <span id="summaryDiscount">R\$ 0,00</span></p>
+                            <p>Cupom: <span id="summaryCoupon">R\$ 0,00</span></p>
+                            <p>Taxa Cartão: <span id="summaryCardFee">R\$ 0,00</span></p>
+                            <p class="total-price">Total a pagar por mês: <span id="summaryTotal">R\$ 0,00</span></p>
+                        </div>
+                    </div>
+
+                    <div class="form-navigation">
+                        <button type="button" class="btn btn-prev">
+                            <span>←</span>
+                            Voltar
+                        </button>
+                        <button type="button" class="btn btn-submit">
+                            Finalizar Inscrição
+                            <span>✓</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TELA DE SUCESSO -->
+                <div class="form-step" id="step-success">
+                    <h2 class="step-title">Cadastro quase completo! 🎨</h2>
+                    <div class="status-box status-success">
+                        <h3 id="statusHeading">Inscrição enviada com sucesso!</h3>
+                        <p id="statusMessage">Aguarde o processamento. Você será redirecionado para o pagamento se aplicável.</p>
+                        <button type="button" id="goToPaymentBtn" class="btn">Ir para Pagamento</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts jQuery e jQuery Mask -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <!-- Seus scripts personalizados -->
+    <script src="js/cpfValidation.js"></script>
+    <script src="js/priceCalculator.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
