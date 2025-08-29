@@ -39,11 +39,13 @@ $(document).ready(function() {
     // Exibe um passo específico do formulário
     function showStep(stepNum) {
         $('.form-step').removeClass('active');
+        // Mapeia os passos para os IDs reais no HTML
         let stepId;
         if (stepNum === 1) stepId = '#step-1';
-        else if (stepNum === 2) stepId = '#step-2'; // Dados do Aprendiz
-        else if (stepNum === 3) stepId = '#step-3'; // Seleção de Cursos
-        else if (stepNum === 4) stepId = '#step-4'; // Resumo/Confirmação
+        else if (stepNum === 2) stepId = '#step-2'; // Dados do Responsável
+        else if (stepNum === 3) stepId = '#step-3'; // Dados dos Aprendizes
+        else if (stepNum === 4) stepId = '#step-terms'; // Termos e Condições
+        else if (stepNum === 5) stepId = '#step-4'; // Plano de Pagamento e Resumo
         else if (stepNum === 'success') stepId = '#step-success';
 
         $(stepId).addClass('active');
@@ -51,15 +53,18 @@ $(document).ready(function() {
 
         // Ajusta visibilidade dos botões de navegação
         const isSuccessStep = (stepId === '#step-success');
-        const isFinalDataStep = (stepId === '#step-4');
+        const isFinalDataStep = (stepId === '#step-4'); // Passo do resumo financeiro
         const isWelcomeStep = (stepId === '#step-1');
 
         $('.btn-prev').toggle(!isWelcomeStep && !isSuccessStep);
         $('.btn-next').toggle(!isFinalDataStep && !isSuccessStep);
         $('.btn-submit').toggle(isFinalDataStep);
-        $('#goToPaymentBtn').toggle(false);
+        $('#goToPaymentBtn').toggle(false); // Esconde por padrão, só mostra se tiver link de pagamento
 
-        $('html, body').animate({ scrollTop: 0 }, 500);
+        // Rola para o topo absoluto da página
+        $('html, body').animate({
+            scrollTop: 0
+        }, 500);
     }
 
     // Função para validar campos
