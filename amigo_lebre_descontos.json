@@ -1,0 +1,20 @@
+[
+  {
+    "categoria": "Amigo Lebre | Mais Cultura",
+    "descricao": "Estudantes, professores, aposentados, pessoas que moram fora de São Paulo e trabalhadores da cultura.",
+    "valor_anual": 140,
+    "desconto_cursos": 0.15
+  },
+  {
+    "categoria": "Amigo Lebre | Individual",
+    "descricao": "Público geral.",
+    "valor_anual": 280,
+    "desconto_cursos": 0.10
+  },
+  {
+    "categoria": "Amigo Lebre | Família",
+    "descricao": "Famílias: acesso gratuito para até seis membros da família. Todas as configurações de família são bem-vindas.",
+    "valor_anual": 540,
+    "desconto_cursos": 0.20
+  }
+]
