@@ -2,7 +2,7 @@
 
 $(document).ready(function() {
     let currentStep = 1; // Inicia no primeiro passo (bem-vindo)
-    const totalSteps = 4; // 1: Boas-vindas, 2: Dados do Aprendiz, 3: Seleção de Cursos, 4: Resumo/Confirmação
+        const totalSteps = 5; // 1: Boas-vindas, 2: Responsável, 3: Aprendizes, 4: Termos, 5: Resumo/Confirmação
     let pricesDataLoaded = false;
     let prefilledData = null; // Para armazenar dados pré-preenchidos
     let amigoLebreCategoria = null; // Categoria do Amigo Lebre retornada pelo n8n
@@ -42,10 +42,10 @@ $(document).ready(function() {
         // Mapeia os passos para os IDs reais no HTML
         let stepId;
         if (stepNum === 1) stepId = '#step-1'; // Boas-vindas
-        else if (stepNum === 2) stepId = '#step-2'; // Dados do Responsável
-        else if (stepNum === 3) stepId = '#step-3'; // Aprendizes e Seleção de Cursos
-        else if (stepNum === 4) stepId = '#step-terms'; // Termos e Condições
-        else if (stepNum === 5) stepId = '#step-4'; // Plano de Pagamento e Resumo
+        else if (stepNum === 2) stepId = '#step-2'; // Responsável
+        else if (stepNum === 3) stepId = '#step-3'; // Aprendizes
+        else if (stepNum === 4) stepId = '#step-terms'; // Termos
+        else if (stepNum === 5) stepId = '#step-4'; // Resumo/Confirmação
         else if (stepNum === 'success') stepId = '#step-success';
 
         $(stepId).addClass('active');
