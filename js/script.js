@@ -41,9 +41,9 @@ $(document).ready(function() {
         $('.form-step').removeClass('active');
         // Mapeia os passos para os IDs reais no HTML
         let stepId;
-        if (stepNum === 1) stepId = '#step-1';
+        if (stepNum === 1) stepId = '#step-1'; // Boas-vindas
         else if (stepNum === 2) stepId = '#step-2'; // Dados do Responsável
-        else if (stepNum === 3) stepId = '#step-3'; // Dados dos Aprendizes
+        else if (stepNum === 3) stepId = '#step-3'; // Aprendizes e Seleção de Cursos
         else if (stepNum === 4) stepId = '#step-terms'; // Termos e Condições
         else if (stepNum === 5) stepId = '#step-4'; // Plano de Pagamento e Resumo
         else if (stepNum === 'success') stepId = '#step-success';
