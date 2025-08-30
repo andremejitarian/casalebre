@@ -140,6 +140,12 @@ body {
     position: relative;
 }
 
+/* Ajuste o alinhamento do título da etapa 3 para a esquerda, conforme a imagem de referência */
+#step-3 .step-title {
+    text-align: left;
+}
+
+
 /* Campos do formulário */
 .form-fields {
     margin-bottom: 30px;
@@ -223,7 +229,7 @@ body {
 
 .checkbox-group:hover,
 .radio-group:hover {
-    background-color: #FFD6D6;
+    background-color: rgba(255, 68, 68, 0.1); /* Um vermelho muito suave com transparência */
 }
 
 .checkbox-group input[type="checkbox"],
@@ -296,7 +302,7 @@ body {
 .btn-add-apprentice,
 #goToPaymentBtn {
     background: linear-gradient(135deg, #FF4444, #FF8888);
-    color: #5B5B5B;
+    color: #ffffff; /* ALTERADO: Cor do texto para branco para melhor contraste */
     box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
 }
 
@@ -640,11 +646,11 @@ body {
     display: none !important;
 }
 
+/* ESTILOS ANTIGOS, QUE SERÃO SUBSTITUÍDOS PELOS CARDS */
 .courses-selection {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    background: #f9f9f9;
+    /*border: 1px solid #ddd;*/ /* REMOVIDO: Borda e padding movidos para .courses-grid */
+    /*padding: 15px;*/
+    /*background: #f9f9f9;*/
 }
 
 .course-category {
@@ -656,10 +662,7 @@ body {
 }
 
 .course-category h4 {
-    margin: 0 0 10px 0;
-    color: #333;
-    font-size: 1rem;
-    font-weight: 600;
+    display: none; /* Esconde o título da categoria, se houver */
 }
 
 .course-price {
@@ -799,4 +802,276 @@ body {
 /* Esconde passos não ativos */
 .form-step:not(.active) {
     display: none !important;
+}
+
+/* =================================
+   NOVOS ESTILOS PARA CARDS DE CURSOS
+   ================================= */
+
+/* Container geral para os cards (substitui .courses-selection para o layout de grid) */
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Layout de grade responsivo */
+    gap: 25px; /* Espaço entre os cards */
+    margin-top: 20px;
+    padding: 15px; /* Adiciona um padding interno para a grade de cards */
+    background: #f9f9f9; /* Fundo leve para a seção de seleção */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    max-height: 500px; /* Altura máxima para ativar o scroll, ajuste conforme necessário */
+    overflow-y: auto; /* Adiciona barra de rolagem se a lista for muito longa */
+    scrollbar-width: thin; /* Para navegadores baseados em Firefox */
+    scrollbar-color: #FF4444 #f1f1f1; /* Cor da barra de rolagem */
+}
+
+/* Scrollbar para navegadores baseados em Webkit (Chrome, Safari, Edge) */
+.courses-grid::-webkit-scrollbar {
+    width: 8px;
+}
+
+.courses-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.courses-grid::-webkit-scrollbar-thumb {
+    background-color: #FF4444;
+    border-radius: 10px;
+    border: 2px solid #f1f1f1;
+}
+
+
+/* Estilo base do card individual */
+.curso-card {
+    background-color: #ffffff;
+    border: 2px solid #eee; /* Borda suave */
+    border-radius: 12px;
+    overflow: hidden; /* Garante que a imagem e outros elementos respeitem o border-radius */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    position: relative;
+}
+
+/* Efeito ao passar o mouse */
+.curso-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    border-color: #FF8888; /* Borda com cor de destaque ao passar o mouse */
+}
+
+/* Estilo para card selecionado */
+.curso-card.selected {
+    border-color: #FF4444; /* Borda vermelha forte para indicar seleção */
+    box-shadow: 0 0 0 4px rgba(255, 68, 68, 0.2); /* Sombra suave para destacar */
+}
+
+/* Cabeçalho do card (imagem e checkbox) */
+.card-header {
+    position: relative;
+    width: 100%;
+    height: 180px; /* Altura fixa para todas as imagens, para consistência */
+    overflow: hidden;
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Recorta a imagem para preencher o espaço sem distorcer */
+    display: block; /* Remove espaço extra abaixo da imagem */
+}
+
+/* Checkbox dentro do card */
+.curso-checkbox {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 28px; /* Tamanho maior para o checkbox */
+    height: 28px;
+    z-index: 10;
+    cursor: pointer;
+    accent-color: #FF4444; /* Cor do checkbox quando marcado */
+    /* Estilo para o visual do checkbox */
+    background-color: #fff;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    appearance: none; /* Esconde o estilo padrão do navegador */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: all 0.2s ease;
+}
+
+.curso-checkbox:checked {
+    border-color: #FF4444;
+    background-color: #FF4444;
+    /* Adiciona um ícone de check personalizado */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3csvg%3e");
+    background-size: 100% 100%;
+    background-position: 50%;
+    background-repeat: no-repeat;
+}
+
+.curso-checkbox:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.3);
+}
+
+
+/* Corpo do card (conteúdo de texto) */
+.card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Permite que o corpo do card se expanda e o botão fique no final */
+}
+
+.card-title {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #5B5B5B;
+    margin-top: 0;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.card-subtitle {
+    font-size: 0.9em;
+    color: #8a8a8a;
+    margin-bottom: 15px;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.card-description-short {
+    font-size: 0.9em;
+    color: #5B5B5B;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    flex-grow: 1; /* Permite que a descrição ocupe o espaço disponível */
+}
+
+.card-details {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px 0;
+    font-size: 0.85em;
+    color: #5B5B5B;
+}
+
+.card-details li {
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between; /* Alinha o label e o valor */
+    padding-bottom: 3px;
+    border-bottom: 1px dotted #efefef; /* Linha pontilhada sutil */
+}
+
+.card-details li:last-child {
+    border-bottom: none;
+}
+
+.card-details li strong {
+    color: #5B5B5B;
+    font-weight: 500;
+}
+
+/* Estilo para o preço dentro do card */
+.course-price {
+    color: #FF4444; /* Seu vermelho principal */
+    font-weight: 600;
+    font-size: 1em; /* Tamanho padrão para o preço no card */
+}
+
+/* Indicador de vagas esgotadas */
+.esgotado {
+    color: #dc3545; /* Vermelho mais escuro para esgotado */
+    font-weight: bold;
+}
+
+/* Botão "Ver Mais Detalhes" */
+.btn-ver-mais {
+    background-color: #f0f0f0; /* Cinza claro */
+    color: #5B5B5B;
+    border: 1px solid #ddd;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    align-self: flex-end; /* Alinha o botão à direita no final do card */
+    margin-top: 15px; /* Espaço acima do botão */
+}
+
+.btn-ver-mais:hover {
+    background-color: #e0e0e0;
+    border-color: #c0c0c0;
+    transform: translateY(-2px);
+}
+
+/* Estilos para o resumo dos cursos selecionados na Etapa 5 */
+.summary-course-item {
+    padding: 8px 0;
+    font-size: 1rem;
+    color: #5B5B5B;
+    line-height: 1.4;
+    display: block; /* Garante que cada item de curso ocupe sua própria linha */
+    padding-left: 20px; /* Indentação para destacar que são cursos */
+    position: relative;
+}
+
+.summary-course-item::before {
+    content: '•'; /* Marcador de lista personalizado */
+    color: #FF4444; /* Cor do marcador */
+    position: absolute;
+    left: 5px;
+}
+
+/* Ajustes responsivos para os cards */
+@media (max-width: 768px) {
+    .courses-grid {
+        grid-template-columns: 1fr; /* Uma coluna em telas menores */
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .courses-grid {
+        padding: 10px;
+        gap: 15px;
+    }
+
+    .curso-card {
+        padding: 0; /* O padding é feito no card-body */
+    }
+
+    .card-header {
+        height: 150px;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .card-title {
+        font-size: 1.2em;
+    }
+
+    .card-subtitle {
+        font-size: 0.85em;
+    }
+
+    .card-description-short {
+        font-size: 0.85em;
+    }
+
+    .card-details {
+        font-size: 0.8em;
+    }
+
+    .btn-ver-mais {
+        font-size: 0.85em;
+        padding: 8px 15px;
+    }
 }

@@ -1,9 +1,12 @@
 $(document).ready(function() {
     let currentStep = 1;
-    const totalSteps = 5;
+    const totalSteps = 4; // Ajustado para 4, já que o step-terms não está no HTML
     let pricesDataLoaded = false;
     let prefilledData = null;
     let amigoLebreCategoria = null;
+
+    // --- NOVA VARIÁVEL GLOBAL PARA OS DADOS DOS CURSOS ---
+    let allCoursesData = [];
 
     // URLs dos webhooks
     const WEBHOOK_CONSULTA_URL = 'https://criadordigital-n8n-webhook.kttqgl.easypanel.host/webhook/consulta-matricula';
@@ -16,37 +19,42 @@ $(document).ready(function() {
         $('.mask-date').mask('00/00/0000');
     }
 
-    // Carrega dados e inicializa o formulário
+    // Carrega dados e inicializa o formulário (MODIFICADO)
     async function initForm() {
-        pricesDataLoaded = await priceCalculator.loadPriceData();
+        // Assume que priceCalculator.loadPriceData() agora carrega o cursos.json
+        // e expõe os dados dos cursos via priceCalculator.getAllCourses()
+        pricesDataLoaded = await priceCalculator.loadPriceData(); 
         if (pricesDataLoaded) {
+            allCoursesData = priceCalculator.getAllCourses(); // Popula a nova variável global
             initializeMasks();
-            await checkMatriculaParam();
-            populateCourseSelection();
-            showStep(currentStep);
-            setupEventListeners();
-            updateSummaryAndTotal();
+            // checkMatriculaParam() e populateCourseSelection() são chamados aqui.
+            // A ordem é importante: populateCourseSelection() deve ser chamado antes de 
+            // checkMatriculaParam() para que os cards existam na DOM antes de tentar marcá-los.
+            populateCourseSelection(); 
+            await checkMatriculaParam(); 
+            setupEventListeners(); 
+            updateSummaryAndTotal(); // Garante que o resumo inicial esteja correto
+            showStep(currentStep); // Exibe o primeiro passo
         } else {
             $('#registrationForm').html('<p class="error-message" style="display: block; text-align: center;">Não foi possível carregar os dados do formulário. Por favor, tente novamente mais tarde.</p>');
         }
     }
 
-    // Exibe um passo específico do formulário
+    // Exibe um passo específico do formulário (AJUSTADO PARA OS IDs DO HTML ATUAL)
     function showStep(stepNum) {
         $('.form-step').removeClass('active');
         let stepId;
         if (stepNum === 1) stepId = '#step-1';
         else if (stepNum === 2) stepId = '#step-2';
         else if (stepNum === 3) stepId = '#step-3';
-        else if (stepNum === 4) stepId = '#step-terms';
-        else if (stepNum === 5) stepId = '#step-4';
+        else if (stepNum === 4) stepId = '#step-4'; // Este é o passo de pagamento/resumo
         else if (stepNum === 'success') stepId = '#step-success';
 
         $(stepId).addClass('active');
         currentStep = stepNum;
 
         const isSuccessStep = (stepId === '#step-success');
-        const isFinalDataStep = (stepId === '#step-4');
+        const isFinalDataStep = (stepId === '#step-4'); 
         const isWelcomeStep = (stepId === '#step-1');
 
         $('.btn-prev').toggle(!isWelcomeStep && !isSuccessStep);
@@ -57,51 +65,102 @@ $(document).ready(function() {
         $('html, body').animate({ scrollTop: 0 }, 500);
     }
 
-    // Popula a seleção de cursos
+    // Popula a seleção de cursos (REESCRITO PARA CARDS)
     function populateCourseSelection() {
-        const allCourses = priceCalculator.getAllCourses();
-        const cursos = allCourses.filter(c => c.categoria === 'curso');
-        const contraturnos = allCourses.filter(c => c.categoria === 'contraturno');
+        const $cursosGridContainer = $('#cursosGridContainer');
+        $cursosGridContainer.empty(); // Limpa a mensagem "Carregando cursos..." ou conteúdo antigo
 
-        // Popula cursos
-        const $cursosContainer = $('#cursosContainer');
-        $cursosContainer.empty();
-        cursos.forEach(course => {
-            const referencePrice = course.precos.mensal;
-            const checkboxHtml = `
-                <div class="checkbox-group">
-                    <input type="checkbox" class="course-checkbox" value="${course.id}" id="course-${course.id}">
-                    <label for="course-${course.id}">
-                        ${course.nome} 
-                        <span class="course-price">(a partir de ${priceCalculator.formatCurrency(referencePrice)})</span>
-                    </label>
+        if (allCoursesData.length === 0) {
+            $cursosGridContainer.html('<p class="error-message">Nenhum curso disponível no momento.</p>');
+            return;
+        }
+
+        allCoursesData.forEach(course => {
+            const referencePrice = course.precos.mensal; // Preço de referência para exibição no card
+            const cardHtml = `
+                <div class="curso-card" data-course-id="${course.id}">
+                    <div class="card-header">
+                        <img src="${course.imagem}" alt="${course.nome}" class="card-image">
+                        <input type="checkbox" id="curso-${course.id}" name="curso-${course.id}" value="${course.id}" class="curso-checkbox">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">${course.nome}</h3>
+                        <p class="card-subtitle">${course.subtitulo}</p>
+                        <p class="card-description-short">${course.descricaoCurta}</p>
+                        <ul class="card-details">
+                            <li><strong>Dia:</strong> <span>${course.detalhes.dia}</span></li>
+                            <li><strong>Horário:</strong> <span>${course.detalhes.horario}</span></li>
+                            <li><strong>Idade:</strong> <span>${course.detalhes.idade_min} a ${course.detalhes.idade_max} anos</span></li>
+                            <li><strong>Professor:</strong> <span>${course.detalhes.professor}</span></li>
+                            <li><strong>Preço Mensal:</strong> <span class="course-price">${priceCalculator.formatCurrency(referencePrice)}</span></li>
+                            ${course.vagasDisponiveis !== undefined ? `<li><strong>Vagas:</strong> <span>${course.vagasDisponiveis === 0 ? '<span class="esgotado">Esgotado</span>' : course.vagasDisponiveis}</span></li>` : ''}
+                            ${course.detalhes.quantidade_minima_alunos !== undefined ? `<li><strong>Mín. Alunos:</strong> <span>${course.detalhes.quantidade_minima_alunos}</span></li>` : ''}
+                        </ul>
+                        <button type="button" class="btn-ver-mais" data-course-id="${course.id}">Ver Mais Detalhes</button>
+                    </div>
                 </div>
             `;
-            $cursosContainer.append(checkboxHtml);
+            $cursosGridContainer.append(cardHtml);
+        });
+        
+        // No lugar de $cursosContainer.append(checkboxHtml);
+        // Não é mais necessário separar em cursos e contraturnos, todos vão para o mesmo grid.
+        // O `contraturnosContainer` foi removido do HTML.
+    }
+
+    // Função para exibir um modal com detalhes completos do curso (NOVA FUNÇÃO)
+    function showCourseDetailsModal(course) {
+        let detailsHtml = `
+            <h3>${course.nome} - ${course.subtitulo}</h3>
+            <p>${course.descricaoCompleta}</p>
+            <ul>
+                <li><strong>Dia:</strong> ${course.detalhes.dia}</li>
+                <li><strong>Horário:</strong> ${course.detalhes.horario}</li>
+                <li><strong>Professor:</strong> ${course.detalhes.professor}</li>
+                <li><strong>Contato Prof.:</strong> ${course.detalhes.professor_contato_tel}</li>
+                <li><strong>Aulas:</strong> ${course.detalhes.aulas_quantidade} (${course.detalhes.aulas_datas})</li>
+                <li><strong>Carga Horária:</strong> ${course.detalhes.carga_horaria_total}</li>
+                <li><strong>Período:</strong> ${course.detalhes.data_inicio} a ${course.detalhes.data_termino}</li>
+                <li><strong>Duração por Aula:</strong> ${course.detalhes.duracao_aula_horas}h</li>
+                <li><strong>Material:</strong> ${course.detalhes.material}</li>
+                <li><strong>Idade:</strong> ${course.detalhes.idade_min} a ${course.detalhes.idade_max} anos</li>
+                <li><strong>Vagas Disponíveis:</strong> ${course.vagasDisponiveis === 0 ? 'Esgotado' : course.vagasDisponiveis}</li>
+                <li><strong>Mínimo Alunos:</strong> ${course.detalhes.quantidade_minima_alunos}</li>
+                <li><strong>Preço Mensal:</strong> ${priceCalculator.formatCurrency(course.precos.mensal)}</li>
+            </ul>
+        `;
+        // POR ENQUANTO, APENAS UM ALERT. VOCÊ PODE SUBSTITUIR POR UM MODAL COM HTML E CSS.
+        alert(detailsHtml);
+    }
+
+    // Função para anexar event listeners específicos aos cards de cursos (NOVA FUNÇÃO)
+    function attachCourseCardEventListeners() {
+        // Listener delegado para checkboxes dentro do courses-grid
+        $('#cursosGridContainer').on('change', '.curso-checkbox', function() {
+            const courseId = $(this).val();
+            const $card = $(this).closest('.curso-card');
+            if (this.checked) {
+                $card.addClass('selected');
+            } else {
+                $card.removeClass('selected');
+            }
+            updateSummaryAndTotal(); // Recalcula o total ao selecionar/desselecionar
         });
 
-        // Popula contraturnos
-        const $contraturnosContainer = $('#contraturnosContainer');
-        $contraturnosContainer.empty();
-        contraturnos.forEach(course => {
-            const referencePrice = course.precos.mensal;
-            const checkboxHtml = `
-                <div class="checkbox-group">
-                    <input type="checkbox" class="course-checkbox" value="${course.id}" id="course-${course.id}">
-                    <label for="course-${course.id}">
-                        ${course.nome} 
-                        <span class="course-price">(a partir de ${priceCalculator.formatCurrency(referencePrice)})</span>
-                    </label>
-                </div>
-            `;
-            $contraturnosContainer.append(checkboxHtml);
+        // Listener delegado para botões "Ver Mais Detalhes"
+        $('#cursosGridContainer').on('click', '.btn-ver-mais', function() {
+            const courseId = $(this).data('course-id');
+            const course = allCoursesData.find(c => c.id === courseId);
+            if (course) {
+                showCourseDetailsModal(course);
+            }
         });
     }
 
     // Função para validar campos
     function validateField(inputElement, validationFn = null, errorMessage = 'Campo obrigatório.') {
         const $input = $(inputElement);
-        const $formGroup = $input.closest('.form-group, .checkbox-group');
+        const $formGroup = $input.closest('.form-group'); // Alterado para buscar .form-group pai
         const $errorDiv = $formGroup.find('.error-message');
         let isValid = true;
 
@@ -109,9 +168,9 @@ $(document).ready(function() {
         $errorDiv.hide().text('');
 
         if ($input.is(':checkbox')) {
-            if ($input.prop('required') && !$input.is(':checked')) {
-                isValid = false;
-            }
+            // Checkboxes de "Como ficou sabendo" não são validados por aqui, mas sim em validateCurrentStep
+            // A validação de checkbox individual para required seria aqui se fosse o caso.
+            // Para os cards, o checkbox não é "required" por si só, e sim a seleção de *pelo menos um* curso.
         } else if ($input.prop('required') && $input.val().trim() === '') {
             isValid = false;
         } else if (validationFn && !validationFn($input.val())) {
@@ -125,10 +184,11 @@ $(document).ready(function() {
         return isValid;
     }
 
-    // Valida seleção de cursos
+    // Valida seleção de cursos (AJUSTADO PARA O NOVO ID)
     function validateCourseSelection() {
-        const $checkedCourses = $('.course-checkbox:checked');
-        const $errorDiv = $('.courses-selection').siblings('.error-message');
+        const $checkedCourses = $('.curso-checkbox:checked'); // Usando a nova classe do checkbox do card
+        // O error-message está logo abaixo do cursosGridContainer no HTML
+        const $errorDiv = $('#cursosGridContainer').siblings('.error-message');
         
         if ($checkedCourses.length === 0) {
             $errorDiv.text('Selecione pelo menos um curso.').show();
@@ -139,7 +199,7 @@ $(document).ready(function() {
         }
     }
 
-    // Valida o passo atual antes de avançar
+    // Valida o passo atual antes de avançar (AJUSTADO)
     function validateCurrentStep() {
         let isValid = true;
 
@@ -164,19 +224,12 @@ $(document).ready(function() {
         } else if (currentStep === 3) {
             isValid = validateCourseSelection();
 
-        } else if (currentStep === 4) {
-            isValid = validateField($('#aceiteTermos'), null, 'Você deve aceitar os termos e condições.') && isValid;
+        // Removido o passo 4 de termos, pois ele não está no HTML atual.
+        // A validação para o passo 5 (pagamento) se torna o currentStep === 4
+        } else if (currentStep === 4) { // Antigo passo 5, agora passo 4
+            // Validação de termos e autorizaFoto foi removida pois não está no HTML fornecido
+            // Se você adicionar um passo de termos, ele será o currentStep === 4, e este será o currentStep === 5.
 
-            const $photoConsentRadios = $('input[name="autorizaFoto"]');
-            const $photoConsentErrorDiv = $('.photo-consent-error');
-            if ($photoConsentRadios.filter(':checked').length === 0) {
-                isValid = false;
-                $photoConsentErrorDiv.text('Selecione uma opção para autorização de uso de imagem.').show();
-            } else {
-                $photoConsentErrorDiv.hide().text('');
-            }
-
-        } else if (currentStep === 5) {
             isValid = validateField($('#planoPagamento'), null, 'Selecione um plano de pagamento.') && isValid;
             isValid = validateField($('#formaPagamento'), null, 'Selecione a forma de pagamento.') && isValid;
             
@@ -195,14 +248,14 @@ $(document).ready(function() {
             planoPagamento: $('#planoPagamento').val(),
             formaPagamento: $('#formaPagamento').val(),
             diaVencimento: ($('#formaPagamento').val() === 'PIX/Boleto') ? $('#diaVencimento').val() : '',
-            aceiteTermos: $('#aceiteTermos').is(':checked'),
-            autorizaFoto: $('input[name="autorizaFoto"]:checked').val(),
+            aceiteTermos: true, // Placeholder, pois o campo não está no HTML
+            autorizaFoto: 'nao_se_aplica', // Placeholder, pois o campo não está no HTML
             cupomCode: $('#cupomCode').val().toUpperCase(),
             amigoLebreCategoria: amigoLebreCategoria
         };
 
-        // Coleta cursos selecionados
-        $('.course-checkbox:checked').each(function() {
+        // Coleta cursos selecionados (AJUSTADO)
+        $('.curso-checkbox:checked').each(function() { // Usando a nova classe
             formData.cursosSelecionados.push($(this).val());
         });
 
@@ -214,12 +267,21 @@ $(document).ready(function() {
         return formData;
     }
 
-    // Atualiza a seção de resumo e o total
+    // Atualiza a seção de resumo e o total (AJUSTADO)
     function updateSummaryAndTotal() {
-        if (!pricesDataLoaded) return { total: 0 };
+        if (!pricesDataLoaded || allCoursesData.length === 0) {
+            // Garante que os dados dos cursos foram carregados
+            $('#summarySubtotal').text('R$ 0,00');
+            $('#summaryDiscount').text('R$ 0,00');
+            $('#summaryCoupon').text('R$ 0,00');
+            $('#summaryCardFee').text('R$ 0,00');
+            $('#summaryTotal').text('R$ 0,00');
+            $('#valor_calculado_total').val('0.00');
+            return { total: 0, subtotal: 0, discountAmount: 0, couponAmount: 0, cardFee: 0 };
+        }
 
         const selectedCourseIds = [];
-        $('.course-checkbox:checked').each(function() {
+        $('.curso-checkbox:checked').each(function() {
             selectedCourseIds.push($(this).val());
         });
 
@@ -227,6 +289,7 @@ $(document).ready(function() {
         const couponCode = $('#cupomCode').val();
         const paymentMethod = $('#formaPagamento').val();
 
+        // priceCalculator.calculateTotal precisará ser adaptado para usar a nova estrutura de dados
         const totals = priceCalculator.calculateTotal(
             selectedCourseIds, 
             paymentPlan, 
@@ -236,17 +299,30 @@ $(document).ready(function() {
         );
 
         // Atualiza o resumo do aprendiz
-        const apprenticeName = $('#nomeAprendiz').val() || 'Aprendiz';
+        // O #nomeAprendiz não está no HTML fornecido, então usamos um placeholder
+        const apprenticeName = 'Aprendiz 1'; // Substitua pelo nome real do aprendiz se houver
         const coursesDetails = [];
         selectedCourseIds.forEach(courseId => {
-            const courseName = priceCalculator.getCourseNameById(courseId);
-            const coursePrice = priceCalculator.getCoursePrice(courseId, paymentPlan);
-            coursesDetails.push(`${courseName} (${priceCalculator.formatCurrency(coursePrice)})`);
+            const course = allCoursesData.find(c => c.id === courseId); // Pega o objeto completo do curso
+            if (course) {
+                // Monta a string de detalhes com base nos campos do JSON
+                const coursePrice = priceCalculator.getCoursePrice(course.id, paymentPlan); // Pega o preço específico
+                coursesDetails.push(`
+                    <li class="summary-course-item">
+                        <strong>${course.nome}</strong> 
+                        <br><span>${course.detalhes.dia} - ${course.detalhes.horario}</span>
+                        <span class="course-price">${priceCalculator.formatCurrency(coursePrice)}</span>
+                    </li>
+                `);
+            }
         });
 
         const $summaryInfo = $('#summaryAprendizInfo');
         if (coursesDetails.length > 0) {
-            $summaryInfo.html(`<strong>${apprenticeName}:</strong><br>${coursesDetails.join('<br>')}`);
+            $summaryInfo.html(`
+                <strong>${apprenticeName}:</strong>
+                <ul class="summary-courses-list">${coursesDetails.join('')}</ul>
+            `);
         } else {
             $summaryInfo.html(`<strong>${apprenticeName}:</strong> Nenhum curso selecionado`);
         }
@@ -292,7 +368,7 @@ $(document).ready(function() {
         }
     }
 
-    // Preenche o formulário com os dados recebidos do webhook
+    // Preenche o formulário com os dados recebidos do webhook (AJUSTADO)
     function fillFormWithPrefilledData(data) {
         // Dados do Responsável
         if (data.responsavel) {
@@ -316,21 +392,21 @@ $(document).ready(function() {
 
         // Dados do aprendiz (primeiro aprendiz se houver array)
         if (data.aprendizes && Array.isArray(data.aprendizes) && data.aprendizes.length > 0) {
-            const aprendiz = data.aprendizes[0]; // Pega apenas o primeiro
-            $('#nomeAprendiz').val(aprendiz.nome);
-            $('#escolaAprendiz').val(aprendiz.escola);
-            $('#dataNascimentoAprendiz').val(aprendiz.dataNascimento);
-            $('#generoAprendiz').val(aprendiz.genero);
-            $('#restricaoAlimentarAprendiz').val(aprendiz.restricaoAlimentar);
-            $('#questaoSaudeAprendiz').val(aprendiz.questaoSaude);
+            const aprendiz = data.aprendizes[0];
+            // Os campos abaixo não existem no HTML fornecido, então serão ignorados por enquanto.
+            // $('#nomeAprendiz').val(aprendiz.nome);
+            // $('#escolaAprendiz').val(aprendiz.escola);
+            // $('#dataNascimentoAprendiz').val(aprendiz.dataNascimento);
+            // $('#generoAprendiz').val(aprendiz.genero);
+            // $('#restricaoAlimentarAprendiz').val(aprendiz.restricaoAlimentar);
+            // $('#questaoSaudeAprendiz').val(aprendiz.questaoSaude);
 
-            // Seleciona os cursos
+            // Seleciona os cursos (AJUSTADO PARA OS NOVOS CARDS)
             if (aprendiz.cursos && Array.isArray(aprendiz.cursos)) {
-                const allCourses = priceCalculator.getAllCourses();
-                aprendiz.cursos.forEach(courseName => {
-                    const courseObj = allCourses.find(c => c.nome === courseName);
-                    if (courseObj) {
-                        $(`input[value="${courseObj.id}"]`).prop('checked', true);
+                aprendiz.cursos.forEach(courseId => { // Assume que 'cursos' no JSON de pré-preenchimento são IDs
+                    const $checkbox = $(`#curso-${courseId}`);
+                    if ($checkbox.length) {
+                        $checkbox.prop('checked', true).trigger('change'); // Marca e dispara o evento de mudança
                     }
                 });
             }
@@ -352,13 +428,13 @@ $(document).ready(function() {
             $('#cupomCode').val(data.couponCode).trigger('input');
         }
 
-        if (data.autorizaFoto) {
-            $(`input[name="autorizaFoto"][value="${data.autorizaFoto}"]`).prop('checked', true);
+        if (data.autorizaFoto) { // Este campo não está no HTML fornecido, então será ignorado.
+            // $(`input[name="autorizaFoto"][value="${data.autorizaFoto}"]`).prop('checked', true);
         }
 
-        updateSummaryAndTotal();
+        updateSummaryAndTotal(); // Chama para garantir que o resumo está atualizado após pré-preenchimento
     }
-    
+
     // Função para processar a submissão do formulário
     async function processFormSubmission() {
         console.log('Iniciando processamento da submissão...');
@@ -425,7 +501,7 @@ $(document).ready(function() {
             $goToPaymentBtn.hide();
         }
     }
-    
+
     // Configura todos os event listeners
     function setupEventListeners() {
         console.log('Configurando event listeners...');
@@ -453,16 +529,20 @@ $(document).ready(function() {
                                 }
                             } else {
                                 amigoLebreCategoria = null;
+                                $('.cupom-feedback').text('Erro ao consultar Amigo Lebre.').addClass('error').removeClass('success'); // Feedback para erro
                             }
                         } catch (err) {
+                            console.error('Erro na requisição Amigo Lebre:', err);
                             amigoLebreCategoria = null;
+                            $('.cupom-feedback').text('Erro na consulta Amigo Lebre.').addClass('error').removeClass('success'); // Feedback para erro de rede
                         }
                     }
                 }
-                if (currentStep < totalSteps) {
+                if (currentStep < totalSteps) { // Total de passos ajustado para 4
                     showStep(currentStep + 1);
                 }
             } else {
+                // Alert é um feedback genérico. Para uma UX melhor, mostre os erros específicos nos campos.
                 alert('Por favor, preencha todos os campos obrigatórios corretamente antes de prosseguir.');
             }
         });
@@ -489,7 +569,8 @@ $(document).ready(function() {
         });
 
         // Disparar cálculo ao mudar seleção de curso, plano ou cupom
-        $('#registrationForm').on('change', '.course-checkbox, #planoPagamento', function() {
+        // O evento de change do .curso-checkbox é agora delegado em attachCourseCardEventListeners
+        $('#registrationForm').on('change', '#planoPagamento', function() {
             updateSummaryAndTotal();
         });
 
@@ -529,7 +610,8 @@ $(document).ready(function() {
             validateField(this, (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), 'Email inválido.');
         });
         
-        $('#registrationForm').on('blur', 'input[required], select[required], textarea[required]', function() {
+        // Validação genérica para inputs required
+        $('#registrationForm').on('blur', 'input[required]:not(.curso-checkbox), select[required], textarea[required]', function() {
             validateField(this);
         });
 
@@ -543,15 +625,8 @@ $(document).ready(function() {
             }
         });
 
-        $('input[name="autorizaFoto"]').on('change', function() {
-            const $photoConsentRadios = $('input[name="autorizaFoto"]');
-            const $photoConsentErrorDiv = $('.photo-consent-error');
-            if ($photoConsentRadios.filter(':checked').length === 0) {
-                $photoConsentErrorDiv.text('Selecione uma opção para autorização de uso de imagem.').show();
-            } else {
-                $photoConsentErrorDiv.hide().text('');
-            }
-        });
+        // Removido o listener para autorizaFoto, pois o campo não está no HTML fornecido.
+        // $('input[name="autorizaFoto"]').on('change', function() { /* ... */ });
         
         $('#goToPaymentBtn').on('click', function() {
             const paymentLink = $(this).data('payment-link');
@@ -560,8 +635,12 @@ $(document).ready(function() {
             }
         });
 
+        // Anexar event listeners para os cards de cursos
+        attachCourseCardEventListeners();
+
         console.log('Event listeners configurados com sucesso!');
     }
 
     initForm();
+
 });

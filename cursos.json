@@ -1,0 +1,413 @@
+{
+  "planos": {
+    "mensal": {
+      "nome": "Mensal",
+      "descricao": "Pagamento mensal",
+      "meses": 1,
+      "parcelas": 1,
+      "taxaCartaoPercentual": 0.0421
+    },
+    "bimestral": {
+      "nome": "Bimestral",
+      "descricao": "2 meses com desconto",
+      "meses": 2,
+      "parcelas": 2,
+      "taxaCartaoPercentual": 0.0421
+    },
+    "quadrimestral": {
+      "nome": "Quadrimestral",
+      "descricao": "4 meses com maior desconto",
+      "meses": 4,
+      "parcelas": 4,
+      "taxaCartaoPercentual": 0.0421
+    }
+  },
+  "cursos": [
+    {
+      "id": "desenho_segunda_manha",
+      "nome": "DESENHO",
+      "categoria": "curso",
+      "detalhes": {
+        "dia": "Segunda-feira",
+        "horario": "09:30 - 11:00",
+        "idade_min": 7,
+        "idade_max": 10,
+        "professor": "José",
+        "professor_contato_tel": "9999-1111",
+        "aulas_quantidade": 12,
+        "aulas_datas": "Todas as segundas-feiras",
+        "material": "Material básico incluso, lista de complementares fornecida",
+        "carga_horaria_total": "18 horas",
+        "data_inicio": "02/09/2024",
+        "data_termino": "18/11/2024",
+        "duracao_aula_horas": 1.5,
+        "quantidade_minima_alunos": 5
+      },
+      "precos": {
+        "mensal": 230,
+        "bimestral": 220,
+        "quadrimestral": 215
+      },
+      "subtitulo": "Fundamentos do Desenho para Crianças",
+      "descricaoCurta": "Curso divertido para crianças explorarem técnicas básicas de desenho e criatividade.",
+      "descricaoCompleta": "Neste curso, os alunos aprenderão sobre formas básicas, perspectiva, luz e sombra de forma lúdica. Utilizaremos lápis, carvão e pastel para criar obras inspiradoras, desenvolvendo a coordenação motora e a expressão artística.",
+      "imagem": "images/curso_desenho.jpg",
+      "vagasDisponiveis": 8
+    },
+    {
+      "id": "desenho_quarta_tarde",
+      "nome": "DESENHO",
+      "categoria": "curso",
+      "detalhes": {
+        "dia": "Quarta-feira",
+        "horario": "16:00 - 17:30",
+        "idade_min": 10,
+        "idade_max": 12,
+        "professor": "José",
+        "professor_contato_tel": "9999-1111",
+        "aulas_quantidade": 12,
+        "aulas_datas": "Todas as quartas-feiras",
+        "material": "Material básico incluso, lista de complementares fornecida",
+        "carga_horaria_total": "18 horas",
+        "data_inicio": "04/09/2024",
+        "data_termino": "20/11/2024",
+        "duracao_aula_horas": 1.5,
+        "quantidade_minima_alunos": 5
+      },
+      "precos": {
+        "mensal": 230,
+        "bimestral": 220,
+        "quadrimestral": 215
+      },
+      "subtitulo": "Desenho Artístico Avançado para Jovens",
+      "descricaoCurta": "Aperfeiçoe suas habilidades de desenho com técnicas mais complexas e projetos desafiadores.",
+      "descricaoCompleta": "Este curso foca em aprofundar as técnicas de desenho, incluindo figura humana, composição avançada e estudo de diferentes estilos. Os alunos serão incentivados a desenvolver um portfólio pessoal e a experimentar novas abordagens.",
+      "imagem": "images/curso_desenho_avancado.jpg",
+      "vagasDisponiveis": 6
+    },
+    {
+      "id": "trabalhos_manuais_manha",
+      "nome": "TRABALHOS MANUAIS",
+      "categoria": "curso",
+      "detalhes": {
+        "dia": "Quinta-feira",
+        "horario": "09:00 - 11:30",
+        "idade_min": 6,
+        "idade_max": 12,
+        "professor": "Betina",
+        "professor_contato_tel": "9999-2222",
+        "aulas_quantidade": 10,
+        "aulas_datas": "Todas as quintas-feiras",
+        "material": "Material incluso",
+        "carga_horaria_total": "25 horas",
+        "data_inicio": "05/09/2024",
+        "data_termino": "07/11/2024",
+        "duracao_aula_horas": 2.5,
+        "quantidade_minima_alunos": 6
+      },
+      "precos": {
+        "mensal": 260,
+        "bimestral": 250,
+        "quadrimestral": 245
+      },
+      "subtitulo": "Aventura Criativa em Trabalhos Manuais",
+      "descricaoCurta": "Explore a criatividade através da cerâmica, origamis e outras técnicas manuais.",
+      "descricaoCompleta": "Um curso vibrante onde os participantes criarão peças únicas utilizando uma variedade de materiais. Desenvolva a coordenação motora fina e a imaginação com projetos de modelagem, dobraduras e construção. Perfeito para quem ama criar com as próprias mãos.",
+      "imagem": "images/curso_manuais.jpg",
+      "vagasDisponiveis": 10
+    },
+    {
+      "id": "artes_extendido_segunda_tarde",
+      "nome": "ARTES extendido",
+      "categoria": "curso",
+      "detalhes": {
+        "dia": "Segunda-feira",
+        "horario": "14:00 - 17:00",
+        "idade_min": 7,
+        "idade_max": 10,
+        "professor": "Bia",
+        "professor_contato_tel": "9999-3333",
+        "aulas_quantidade": 10,
+        "aulas_datas": "Todas as segundas-feiras",
+        "material": "Material básico incluso, lista de complementares fornecida",
+        "carga_horaria_total": "30 horas",
+        "data_inicio": "02/09/2024",
+        "data_termino": "04/11/2024",
+        "duracao_aula_horas": 3.0,
+        "quantidade_minima_alunos": 4
+      },
+      "precos": {
+        "mensal": 290,
+        "bimestral": 280,
+        "quadrimestral": 275
+      },
+      "subtitulo": "Imersão em Artes: Pintura e Colagem",
+      "descricaoCurta": "Uma jornada aprofundada no mundo da pintura e colagem, estimulando a expressão pessoal.",
+      "descricaoCompleta": "Este curso estendido oferece mais tempo para a exploração de técnicas de pintura acrílica, aquarela e colagem. Os alunos desenvolverão projetos mais complexos, aprendendo sobre teoria das cores, composição e história da arte. Ideal para quem busca um mergulho mais profundo.",
+      "imagem": "images/curso_artes_ext.jpg",
+      "vagasDisponiveis": 7
+    },
+    {
+      "id": "artes_quarta_tarde",
+      "nome": "ARTES",
+      "categoria": "curso",
+      "detalhes": {
+        "dia": "Quarta-feira",
+        "horario": "14:00 - 15:30",
+        "idade_min": 6,
+        "idade_max": 11,
+        "professor": "Maria Fernanda",
+        "professor_contato_tel": "9999-4444",
+        "aulas_quantidade": 12,
+        "aulas_datas": "Todas as quartas-feiras",
+        "material": "Material básico incluso",
+        "carga_horaria_total": "18 horas",
+        "data_inicio": "04/09/2024",
+        "data_termino": "20/11/2024",
+        "duracao_aula_horas": 1.5,
+        "quantidade_minima_alunos": 5
+      },
+      "precos": {
+        "mensal": 230,
+        "bimestral": 220,
+        "quadrimestral": 215
+      },
+      "subtitulo": "Introdução às Artes Visuais",
+      "descricaoCurta": "Descubra o universo das artes visuais através de atividades divertidas e criativas.",
+      "descricaoCompleta": "Primeiros passos no mundo da arte, explorando pintura, desenho e escultura de forma simplificada. O foco é na experimentação e no desenvolvimento da autoexpressão, com projetos que estimulam a imaginação e o prazer de criar.",
+      "imagem": "images/curso_artes.jpg",
+      "vagasDisponiveis": 9
+    },
+    {
+      "id": "marcenaria_segunda_manha",
+      "nome": "MARCENARIA",
+      "categoria": "curso",
+      "detalhes": {
+        "dia": "Segunda-feira",
+        "horario": "09:30 - 11:00",
+        "idade_min": 7,
+        "idade_max": 11,
+        "professor": "David",
+        "professor_contato_tel": "9999-5555",
+        "aulas_quantidade": 10,
+        "aulas_datas": "Todas as segundas-feiras",
+        "material": "Material incluso, uso de ferramentas da oficina",
+        "carga_horaria_total": "15 horas",
+        "data_inicio": "02/09/2024",
+        "data_termino": "04/11/2024",
+        "duracao_aula_horas": 1.5,
+        "quantidade_minima_alunos": 3
+      },
+      "precos": {
+        "mensal": 260,
+        "bimestral": 250,
+        "quadrimestral": 245
+      },
+      "subtitulo": "Oficina de Marcenaria Criativa",
+      "descricaoCurta": "Construa seus próprios objetos e brinquedos de madeira, aprendendo técnicas de marcenaria básica.",
+      "descricaoCompleta": "Neste curso, os participantes aprenderão a manusear ferramentas básicas de marcenaria com segurança, a cortar, lixar e montar peças de madeira. O objetivo é criar objetos utilitários ou decorativos, desenvolvendo a coordenação e a capacidade de resolver problemas de forma prática.",
+      "imagem": "images/curso_marcenaria.jpg",
+      "vagasDisponiveis": 5
+    },
+    {
+      "id": "marcenaria_quarta_tarde",
+      "nome": "MARCENARIA",
+      "categoria": "curso",
+      "detalhes": {
+        "dia": "Quarta-feira",
+        "horario": "14:00 - 15:30",
+        "idade_min": 7,
+        "idade_max": 11,
+        "professor": "David",
+        "professor_contato_tel": "9999-5555",
+        "aulas_quantidade": 10,
+        "aulas_datas": "Todas as quartas-feiras",
+        "material": "Material incluso, uso de ferramentas da oficina",
+        "carga_horaria_total": "15 horas",
+        "data_inicio": "04/09/2024",
+        "data_termino": "06/11/2024",
+        "duracao_aula_horas": 1.5,
+        "quantidade_minima_alunos": 3
+      },
+      "precos": {
+        "mensal": 260,
+        "bimestral": 250,
+        "quadrimestral": 245
+      },
+      "subtitulo": "Iniciação à Marcenaria Artística",
+      "descricaoCurta": "Transforme pedaços de madeira em arte, explorando a criatividade e a técnica.",
+      "descricaoCompleta": "Aprenda os primeiros passos da marcenaria com foco na criação artística. Desde o design inicial até o acabamento final, os alunos serão guiados na construção de pequenos projetos de madeira, explorando formas, texturas e cores para criar peças únicas.",
+      "imagem": "images/curso_marcenaria_tarde.jpg",
+      "vagasDisponiveis": 4
+    },
+    {
+      "id": "modelagem_sexta_manha",
+      "nome": "MODELAGEM",
+      "categoria": "curso",
+      "detalhes": {
+        "dia": "Sexta-feira",
+        "horario": "10:00 - 11:30",
+        "idade_min": 6,
+        "idade_max": 9,
+        "professor": "Marta",
+        "professor_contato_tel": "9999-6666",
+        "aulas_quantidade": 10,
+        "aulas_datas": "Todas as sextas-feiras",
+        "material": "Argila e ferramentas básicas inclusas",
+        "carga_horaria_total": "15 horas",
+        "data_inicio": "06/09/2024",
+        "data_termino": "08/11/2024",
+        "duracao_aula_horas": 1.5,
+        "quantidade_minima_alunos": 5
+      },
+      "precos": {
+        "mensal": 260,
+        "bimestral": 255,
+        "quadrimestral": 250
+      },
+      "subtitulo": "Modelagem com Argila e Massa",
+      "descricaoCurta": "Crie esculturas e objetos tridimensionais, explorando a modelagem em argila e outras massas.",
+      "descricaoCompleta": "Um curso hands-on onde a imaginação toma forma. Aprenda técnicas básicas de modelagem, desde o manuseio da argila até a criação de figuras e objetos. Desenvolva a percepção espacial e a criatividade através da experimentação tátil e visual.",
+      "imagem": "images/curso_modelagem.jpg",
+      "vagasDisponiveis": 8
+    },
+    {
+      "id": "modelagem_sexta_tarde_14",
+      "nome": "MODELAGEM",
+      "categoria": "curso",
+      "detalhes": {
+        "dia": "Sexta-feira",
+        "horario": "14:00 - 15:30",
+        "idade_min": 6,
+        "idade_max": 10,
+        "professor": "Marta",
+        "professor_contato_tel": "9999-6666",
+        "aulas_quantidade": 10,
+        "aulas_datas": "Todas as sextas-feiras",
+        "material": "Material para miniaturas incluso",
+        "carga_horaria_total": "15 horas",
+        "data_inicio": "06/09/2024",
+        "data_termino": "08/11/2024",
+        "duracao_aula_horas": 1.5,
+        "quantidade_minima_alunos": 5
+      },
+      "precos": {
+        "mensal": 260,
+        "bimestral": 255,
+        "quadrimestral": 250
+      },
+      "subtitulo": "Oficina de Escultura em Miniatura",
+      "descricaoCurta": "Crie pequenos mundos e personagens em miniatura com diversas massas e argilas.",
+      "descricaoCompleta": "Este curso foca na criação de esculturas detalhadas em pequena escala. Os alunos aprenderão a trabalhar com precisão, a misturar cores e a dar vida aos seus personagens e cenários. Ideal para desenvolver a paciência e a atenção aos detalhes.",
+      "imagem": "images/curso_modelagem_mini.jpg",
+      "vagasDisponiveis": 7
+    },
+    {
+      "id": "modelagem_sexta_tarde_16",
+      "nome": "MODELAGEM",
+      "categoria": "curso",
+      "detalhes": {
+        "dia": "Sexta-feira",
+        "horario": "16:00 - 17:30",
+        "idade_min": 6,
+        "idade_max": 10,
+        "professor": "Marta",
+        "professor_contato_tel": "9999-6666",
+        "aulas_quantidade": 10,
+        "aulas_datas": "Todas as sextas-feiras",
+        "material": "Materiais reciclados e cola inclusos",
+        "carga_horaria_total": "15 horas",
+        "data_inicio": "06/09/2024",
+        "data_termino": "08/11/2024",
+        "duracao_aula_horas": 1.5,
+        "quantidade_minima_alunos": 5
+      },
+      "precos": {
+        "mensal": 260,
+        "bimestral": 255,
+        "quadrimestral": 250
+      },
+      "subtitulo": "Modelagem Criativa com Reciclados",
+      "descricaoCurta": "Transforme materiais recicláveis em arte tridimensional, aprendendo sobre sustentabilidade.",
+      "descricaoCompleta": "Explore a arte da modelagem utilizando materiais do dia a dia. Este curso ensina a reutilizar e reciclar, criando esculturas e objetos artísticos de forma consciente. Uma forma divertida de aprender sobre sustentabilidade e expressão criativa.",
+      "imagem": "images/curso_modelagem_reciclado.jpg",
+      "vagasDisponiveis": 6
+    },
+    {
+      "id": "ingles_sexta_tarde_14",
+      "nome": "INGLÊS",
+      "categoria": "curso",
+      "detalhes": {
+        "dia": "Sexta-feira",
+        "horario": "14:00 - 15:30",
+        "idade_min": 6,
+        "idade_max": 10,
+        "professor": "Lucas",
+        "professor_contato_tel": "9999-7777",
+        "aulas_quantidade": 10,
+        "aulas_datas": "Todas as sextas-feiras",
+        "material": "Livro didático e material de apoio inclusos",
+        "carga_horaria_total": "15 horas",
+        "data_inicio": "06/09/2024",
+        "data_termino": "08/11/2024",
+        "duracao_aula_horas": 1.5,
+        "quantidade_minima_alunos": 6
+      },
+      "precos": {
+        "mensal": 260,
+        "bimestral": 255,
+        "quadrimestral": 250
+      },
+      "subtitulo": "Inglês com Artes e Jogos",
+      "descricaoCurta": "Aprenda inglês de forma divertida, combinando a língua com atividades artísticas e jogos.",
+      "descricaoCompleta": "Nosso curso de inglês para crianças integra o aprendizado do idioma com atividades de arte, música e jogos. O foco é na comunicação oral e na imersão cultural, tornando o processo de aprendizagem leve e engajador. Perfeito para desenvolver a fluência desde cedo.",
+      "imagem": "images/curso_ingles.jpg",
+      "vagasDisponiveis": 9
+    },
+    {
+      "id": "ingles_sexta_tarde_16",
+      "nome": "INGLÊS",
+      "categoria": "curso",
+      "detalhes": {
+        "dia": "Sexta-feira",
+        "horario": "16:00 - 17:30",
+        "idade_min": 6,
+        "idade_max": 10,
+        "professor": "Lucas",
+        "professor_contato_tel": "9999-7777",
+        "aulas_quantidade": 10,
+        "aulas_datas": "Todas as sextas-feiras",
+        "material": "Livro didático e material de apoio inclusos",
+        "carga_horaria_total": "15 horas",
+        "data_inicio": "06/09/2024",
+        "data_termino": "08/11/2024",
+        "duracao_aula_horas": 1.5,
+        "quantidade_minima_alunos": 6
+      },
+      "precos": {
+        "mensal": 260,
+        "bimestral": 255,
+        "quadrimestral": 250
+      },
+      "subtitulo": "Conversação em Inglês com Projetos Criativos",
+      "descricaoCurta": "Desenvolva sua conversação em inglês através de projetos de arte e expressão.",
+      "descricaoCompleta": "Este curso estimula a prática da conversação em inglês por meio de projetos artísticos e discussões sobre temas do cotidiano. Os alunos terão a oportunidade de apresentar suas criações e interagir em um ambiente de apoio, fortalecendo a confiança e a fluência no idioma.",
+      "imagem": "images/curso_ingles_conv.jpg",
+      "vagasDisponiveis": 8
+    }
+  ],
+  "descontos": {
+    "multiplos_cursos": {
+      "nome": "Desconto Múltiplos Cursos",
+      "percentual": 0.05
+    },
+    "irmaos": {
+      "nome": "Desconto Irmãos",
+      "percentual": 0.10
+    },
+    "bolsistas100": {
+      "nome": "Bolsista Integral",
+      "percentual": 1.00
+    }
+  }
+}
