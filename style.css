@@ -175,9 +175,9 @@ body {
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #FAC622;
+    border-color: #FF4444;
     background: #ffffff;
-    box-shadow: 0 0 0 4px rgba(250, 198, 34, 0.1);
+    box-shadow: 0 0 0 4px rgba(255, 68, 68, 0.1);
     transform: translateY(-2px);
 }
 
@@ -223,7 +223,7 @@ body {
 
 .checkbox-group:hover,
 .radio-group:hover {
-    background-color: #F8F1C9;
+    background-color: #FFD6D6;
 }
 
 .checkbox-group input[type="checkbox"],
@@ -232,7 +232,7 @@ body {
     height: 20px;
     margin: 0;
     cursor: pointer;
-    accent-color: #FAC622;
+    accent-color: #FF4444;
 }
 
 .checkbox-group label,
@@ -295,9 +295,9 @@ body {
 .btn-submit,
 .btn-add-apprentice,
 #goToPaymentBtn {
-    background: linear-gradient(135deg, #FAC622, #FCD406);
+    background: linear-gradient(135deg, #FF4444, #FF8888);
     color: #5B5B5B;
-    box-shadow: 0 4px 15px rgba(250, 198, 34, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
 }
 
 .btn-next:hover,
@@ -305,7 +305,7 @@ body {
 .btn-add-apprentice:hover,
 #goToPaymentBtn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(250, 198, 34, 0.4);
+    box-shadow: 0 8px 25px rgba(255, 68, 68, 0.4);
 }
 
 .btn-prev,
@@ -357,7 +357,7 @@ body {
 
 .apprentice-group:hover {
     border-color: #ffffff;
-    box-shadow: 0 8px 25px rgba(250, 198, 34, 0.1);
+    box-shadow: 0 8px 25px rgba(255, 68, 68, 0.1);
 }
 
 .apprentice-group h3 {
@@ -468,7 +468,7 @@ body {
     color: #5B5B5B;
     margin-top: 20px;
     padding-top: 20px;
-    border-top: 3px solid #FAC622;
+    border-top: 3px solid #FF4444;
 }
 
 /* Termos e condições */
@@ -679,7 +679,7 @@ body {
     padding: 10px;
     background-color: #f8f9fa;
     border-radius: 8px;
-    border-left: 4px solid #FCD406;
+    border-left: 4px solid #FF4444;
 }
 
 #summaryApprenticesList li strong {
@@ -689,7 +689,7 @@ body {
 }
 
 .course-price {
-    color: #28a745;
+    color: #FF4444;
     font-weight: 600;
 }
 
@@ -725,7 +725,7 @@ body {
 /* Estado de sucesso */
 .status-box.status-success {
     background: linear-gradient(135deg, #d4edda, #c3e6cb); /* Verde claro */
-    border: 2px solid #28a745; /* Borda verde */
+    border: 2px solid #FF4444; /* Borda vermelha */
 }
 .status-box.status-success #statusHeading,
 .status-box.status-success #statusMessage {
