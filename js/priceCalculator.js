@@ -36,22 +36,26 @@ function getAllCourses() {
     const allCourses = [];
     
     // Adiciona cursos
-    Object.keys(pricesData.cursos).forEach(courseId => {
-        allCourses.push({
-            id: courseId,
-            categoria: 'curso', // Adiciona categoria para facilitar a separação
-            ...pricesData.cursos[courseId]
+    if (pricesData.cursos) {
+        Object.keys(pricesData.cursos).forEach(courseId => {
+            allCourses.push({
+                id: courseId,
+                categoria: 'curso', // Adiciona categoria para facilitar a separação
+                ...pricesData.cursos[courseId]
+            });
         });
-    });
+    }
     
-    // Adiciona contraturnos
-    Object.keys(pricesData.contraturnos).forEach(courseId => {
-        allCourses.push({
-            id: courseId,
-            categoria: 'contraturno', // Adiciona categoria para facilitar a separação
-            ...pricesData.contraturnos[courseId]
+    // Adiciona contraturnos APENAS se existir a propriedade
+    if (pricesData.contraturnos) {
+        Object.keys(pricesData.contraturnos).forEach(courseId => {
+            allCourses.push({
+                id: courseId,
+                categoria: 'contraturno', // Adiciona categoria para facilitar a separação
+                ...pricesData.contraturnos[courseId]
+            });
         });
-    });
+    }
     
     return allCourses;
 }
@@ -66,14 +70,14 @@ function getCoursePrice(courseId, planKey) {
     if (!pricesData) return 0;
     
     // Verifica se é um curso
-    if (pricesData.cursos[courseId]) {
+    if (pricesData.cursos && pricesData.cursos[courseId]) {
         return pricesData.cursos[courseId].precos[planKey] || 0;
     }
     
-    // Verifica se é um contraturno
-    if (pricesData.contraturnos[courseId]) {
-        return pricesData.contraturnos[courseId].precos[planKey] || 0;
-    }
+    // Se você tiver contraturnos separados, descomente:
+    // if (pricesData.contraturnos && pricesData.contraturnos[courseId]) {
+    //     return pricesData.contraturnos[courseId].precos[planKey] || 0;
+    // }
     
     return 0;
 }
@@ -87,20 +91,17 @@ function getCourseById(courseId) {
     if (!pricesData) return null;
     
     // Verifica se é um curso
-    if (pricesData.cursos[courseId]) {
+    if (pricesData.cursos && pricesData.cursos[courseId]) {
+        const curso = pricesData.cursos[courseId];
+        const categoria = courseId.includes('contraturno') || 
+                         courseId.includes('extendido') || 
+                         curso.nome?.toLowerCase().includes('contraturno') ? 
+                         'contraturno' : 'curso';
+        
         return {
             id: courseId,
-            categoria: 'curso',
-            ...pricesData.cursos[courseId]
-        };
-    }
-    
-    // Verifica se é um contraturno
-    if (pricesData.contraturnos[courseId]) {
-        return {
-            id: courseId,
-            categoria: 'contraturno',
-            ...pricesData.contraturnos[courseId]
+            categoria: categoria,
+            ...curso
         };
     }
     
@@ -243,12 +244,8 @@ function calculateTotal(selectedCourseIds, paymentPlanKey, couponCode, paymentMe
 function getCourseNameById(courseId) {
     if (!pricesData) return courseId;
     
-    if (pricesData.cursos[courseId]) {
+    if (pricesData.cursos && pricesData.cursos[courseId]) {
         return pricesData.cursos[courseId].nome;
-    }
-    
-    if (pricesData.contraturnos[courseId]) {
-        return pricesData.contraturnos[courseId].nome;
     }
     
     return courseId;
