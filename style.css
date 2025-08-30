@@ -782,12 +782,21 @@ body {
   border-width: .1em;
 }
 
-/* Mostra o primeiro passo por padrão até o JavaScript carregar */
+/* =================================
+   CORREÇÃO PARA MOSTRAR PASSO INICIAL
+   ================================= */
+
+/* Mostra o primeiro passo por padrão */
 #step-1 {
     display: block;
 }
 
-/* Depois que o JavaScript carregar, só mostra os passos ativos */
+/* Garante que apenas passos ativos sejam mostrados após carregamento */
 .form-step.active {
     display: block !important;
+}
+
+/* Esconde passos não ativos */
+.form-step:not(.active) {
+    display: none !important;
 }
