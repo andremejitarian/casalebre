@@ -101,80 +101,17 @@
 
                 <!-- ETAPA 3: Dados do Aprendiz e Seleção de Cursos -->
                 <div class="form-step" id="step-3">
-                    <h2 class="step-title">Dados do Aprendiz e Seleção de Cursos</h2>
+                    <h2 class="step-title">Seleção de Cursos</h2>
                     <div class="form-fields">
-                        <div class="form-group">
-                            <label for="nomeAprendiz">Nome do Aprendiz *</label>
-                            <input type="text" id="nomeAprendiz" name="nomeAprendiz" required>
-                            <div class="error-message">Nome é obrigatório</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="escolaAprendiz">Escola</label>
-                            <input type="text" id="escolaAprendiz" name="escolaAprendiz">
-                        </div>
-                        <div class="form-group">
-                            <label for="dataNascimentoAprendiz">Data de Nascimento *</label>
-                            <input type="text" id="dataNascimentoAprendiz" name="dataNascimentoAprendiz" class="mask-date" required>
-                            <div class="error-message">Data de nascimento inválida</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="generoAprendiz">Gênero *</label>
-                            <select id="generoAprendiz" name="generoAprendiz" required>
-                                <option value="">Selecione</option>
-                                <option value="feminino">Feminino</option>
-                                <option value="masculino">Masculino</option>
-                                <option value="outro">Outro</option>
-                            </select>
-                            <div class="error-message">Selecione o gênero</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="restricaoAlimentarAprendiz">Restrição Alimentar *</label>
-                            <textarea id="restricaoAlimentarAprendiz" name="restricaoAlimentarAprendiz" required placeholder="Descreva qualquer restrição alimentar ou escreva 'Nenhuma'"></textarea>
-                            <div class="error-message">Campo obrigatório</div>
-                        </div>
-                        <div class="form-group">
-                            <label for="questaoSaudeAprendiz">Questão de Saúde *</label>
-                            <textarea id="questaoSaudeAprendiz" name="questaoSaudeAprendiz" required placeholder="Descreva qualquer questão de saúde relevante ou escreva 'Nenhuma'"></textarea>
-                            <div class="error-message">Campo obrigatório</div>
-                        </div>
                         <div class="form-group">
                             <label>Cursos Selecionados *</label>
                             <div class="courses-selection">
-                                <div class="form-step" id="step-3">
-                                    <h2 class="step-title">Seleção de Cursos</h2>
-                                    <div class="form-fields">
-                                        <div class="form-group">
-                                            <label>Cursos Selecionados *</label>
-                                            <div class="courses-selection">
-                                                <div class="courses-checkboxes">
-                                                    <div class="course-category" id="cursosContainer"></div>
-                                                    <div class="course-category" id="contraturnosContainer"></div>
-                                                </div>
-                                            </div>
-                                            <div class="error-message">Selecione pelo menos um curso</div>
-                                        </div>
-                                    </div>
-                                    <div class="form-navigation">
-                                        <button type="button" class="btn btn-prev"><span>←</span>Voltar</button>
-                                        <button type="button" class="btn btn-next">Avançar<span>→</span></button>
-                                    </div>
+                                <div class="courses-checkboxes">
+                                    <div class="course-category" id="cursosContainer"></div>
+                                    <div class="course-category" id="contraturnosContainer"></div>
                                 </div>
                             </div>
-                            <div class="error-message">Você deve aceitar os termos para continuar</div>
-                        </div>
-                        <div class="form-group">
-                            <label>Autorização para uso de imagem *</label>
-                            <div class="checkbox-group-container">
-                                <div class="radio-group">
-                                    <input type="radio" name="autorizaFoto" value="sim" id="autoriza-sim">
-                                    <label for="autoriza-sim">Autorizo o uso de imagem para divulgação</label>
-                                </div>
-                                <div class="radio-group">
-                                    <input type="radio" name="autorizaFoto" value="nao" id="autoriza-nao">
-                                    <label for="autoriza-nao">NÃO autorizo o uso de imagem</label>
-                                </div>
-                            </div>
-                            <div class="error-message photo-consent-error">Selecione uma opção</div>
+                            <div class="error-message">Selecione pelo menos um curso</div>
                         </div>
                     </div>
                     <div class="form-navigation">
