@@ -781,3 +781,13 @@ body {
   height: .8rem;
   border-width: .1em;
 }
+
+/* Mostra o primeiro passo por padrão até o JavaScript carregar */
+#step-1 {
+    display: block;
+}
+
+/* Depois que o JavaScript carregar, só mostra os passos ativos */
+.form-step.active {
+    display: block !important;
+}
