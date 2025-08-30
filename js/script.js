@@ -589,6 +589,6 @@ $(document).ready(function() {
         console.log('Event listeners configurados com sucesso!');
     }
 
-    $('#step-1 .btn-next').prop('disabled', true);
+    $('#step-1 .btn-next').prop('disabled', false);
     initForm();
 });
