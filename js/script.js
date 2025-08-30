@@ -30,6 +30,8 @@ $(document).ready(function() {
             }
             setupEventListeners(); // Configura todos os event listeners
             updateSummaryAndTotal(); // Calcula e exibe o resumo inicial
+            // Habilita o botão 'Avançar' do passo 1 após o carregamento
+            $('#step-1 .btn-next').prop('disabled', false);
         } else {
             // Caso os dados não carreguem, desabilita o formulário ou exibe mensagem de erro
             $('#registrationForm').html('<p class="error-message" style="display: block; text-align: center;">Não foi possível carregar os dados do formulário. Por favor, tente novamente mais tarde.</p>');
@@ -776,6 +778,8 @@ $(document).ready(function() {
         console.log('Event listeners configurados com sucesso!');
     }
 
+    // Desabilita o botão 'Avançar' do passo 1 até o carregamento
+    $('#step-1 .btn-next').prop('disabled', true);
     // Inicia o formulário quando o DOM estiver pronto
     initForm();
 });
