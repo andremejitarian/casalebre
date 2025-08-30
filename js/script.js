@@ -162,12 +162,7 @@ $(document).ready(function() {
             }
 
         } else if (currentStep === 3) {
-            isValid = validateField($('#nomeAprendiz'), null, 'Nome do aprendiz é obrigatório.') && isValid;
-            isValid = validateField($('#dataNascimentoAprendiz'), (val) => val.replace(/\D/g, '').length === 8, 'Data de nascimento inválida (DD/MM/AAAA).') && isValid;
-            isValid = validateField($('#generoAprendiz'), (val) => val !== '', 'Selecione o gênero.') && isValid;
-            isValid = validateField($('#restricaoAlimentarAprendiz'), null, 'Campo obrigatório.') && isValid;
-            isValid = validateField($('#questaoSaudeAprendiz'), null, 'Campo obrigatório.') && isValid;
-            isValid = validateCourseSelection() && isValid;
+            isValid = validateCourseSelection();
 
         } else if (currentStep === 4) {
             isValid = validateField($('#aceiteTermos'), null, 'Você deve aceitar os termos e condições.') && isValid;
@@ -196,21 +191,6 @@ $(document).ready(function() {
     function collectFormData() {
         const formData = {
             matricula: $('#matricula').val(),
-            // Dados do responsável
-            nomeResponsavel: $('#nomeResponsavel').val(),
-            emailResponsavel: $('#emailResponsavel').val(),
-            telefoneResponsavel: $('#telefoneResponsavel').val().replace(/\D/g, ''),
-            cpfResponsavel: $('#cpfResponsavel').val().replace(/\D/g, ''),
-            emergenciaQuemChamar: $('#emergenciaQuemChamar').val(),
-            // Dados do aprendiz
-            nomeAprendiz: $('#nomeAprendiz').val(),
-            escolaAprendiz: $('#escolaAprendiz').val(),
-            dataNascimentoAprendiz: $('#dataNascimentoAprendiz').val(),
-            generoAprendiz: $('#generoAprendiz').val(),
-            restricaoAlimentarAprendiz: $('#restricaoAlimentarAprendiz').val(),
-            questaoSaudeAprendiz: $('#questaoSaudeAprendiz').val(),
-            // Outros dados
-            comoSoube: [],
             cursosSelecionados: [],
             planoPagamento: $('#planoPagamento').val(),
             formaPagamento: $('#formaPagamento').val(),
@@ -220,11 +200,6 @@ $(document).ready(function() {
             cupomCode: $('#cupomCode').val().toUpperCase(),
             amigoLebreCategoria: amigoLebreCategoria
         };
-
-        // Coleta "Como soube"
-        $('input[name="comoSoube"]:checked').each(function() {
-            formData.comoSoube.push($(this).val());
-        });
 
         // Coleta cursos selecionados
         $('.course-checkbox:checked').each(function() {
