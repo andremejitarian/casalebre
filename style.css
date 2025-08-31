@@ -1,6 +1,22 @@
 /* Importar uma fonte limpa e moderna */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+/* Definição de Variáveis CSS para Cores e Estilos Comuns */
+:root {
+    --primary-color: #FF4444; /* Vermelho principal para destaque e ações */
+    --primary-color-dark: #CC3333; /* Um vermelho ligeiramente mais escuro */
+    --primary-color-light: #FF8888; /* Um vermelho mais claro, usado em gradientes ou destaques leves */
+    --primary-color-lightest: rgba(255, 68, 68, 0.1); /* Versão muito clara do vermelho principal */
+    --primary-rgb: 255, 68, 68; /* Componentes RGB do primary-color, para uso em rgba() */
+
+    --text-color: #5B5B5B; /* Cor principal para o texto */
+    --text-color-light: #8a8a8a; /* Cor para texto secundário ou descrições */
+
+    --border-color: #ddd; /* Cor padrão para bordas */
+    --border-radius: 12px; /* Raio padrão para bordas arredondadas */
+    --field-bg-color: #fdfdfd; /* Cor de fundo para campos de formulário */
+}
+
 /* Reset básico e box-sizing */
 * {
     margin: 0;
@@ -882,41 +898,6 @@ body {
     display: block; /* Remove espaço extra abaixo da imagem */
 }
 
-/* Checkbox dentro do card */
-.curso-checkbox {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    width: 28px; /* Tamanho maior para o checkbox */
-    height: 28px;
-    z-index: 10;
-    cursor: pointer;
-    accent-color: #FF4444; /* Cor do checkbox quando marcado */
-    /* Estilo para o visual do checkbox */
-    background-color: #fff;
-    border: 2px solid #ccc;
-    border-radius: 6px;
-    appearance: none; /* Esconde o estilo padrão do navegador */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    transition: all 0.2s ease;
-}
-
-.curso-checkbox:checked {
-    border-color: #FF4444;
-    background-color: #FF4444;
-    /* Adiciona um ícone de check personalizado */
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3csvg%3e");
-    background-size: 100% 100%;
-    background-position: 50%;
-    background-repeat: no-repeat;
-}
-
-.curso-checkbox:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.3);
-}
-
 
 /* Corpo do card (conteúdo de texto) */
 .card-body {
@@ -1074,4 +1055,76 @@ body {
         font-size: 0.85em;
         padding: 8px 15px;
     }
+}
+
+/* ESTILOS PARA O CHECKBOX PERSONALIZADO DENTRO DO CARD */
+
+/* Certifica que o curso-card pode posicionar elementos filhos absolutamente */
+.curso-card {
+    position: relative;
+}
+
+/* Wrapper do checkbox - posicionado fora da imagem */
+.curso-checkbox-wrapper {
+    position: absolute;
+    top: 10px; /* Distância do topo do card */
+    right: 10px; /* Distância da direita do card */
+    z-index: 20; /* Garante que fique acima de outros elementos do card */
+    cursor: pointer; /* Indica que é clicável */
+    display: block; /* Garante que o wrapper ocupe espaço */
+    width: 28px; /* Largura para o checkbox */
+    height: 28px; /* Altura para o checkbox */
+}
+
+/* Esconde o input checkbox nativo */
+.curso-checkbox-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    pointer-events: none; /* Garante que o clique seja no wrapper */
+}
+
+/* Estilo do checkbox personalizado (o quadrado) */
+.curso-checkbox-custom {
+    display: block;
+    width: 28px;
+    height: 28px;
+    background-color: #fff; /* Fundo branco */
+    border: 2px solid var(--primary-color); /* Borda da cor principal */
+    border-radius: 6px; /* Borda levemente arredondada */
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+/* Efeito de hover no checkbox personalizado */
+.curso-checkbox-wrapper:hover .curso-checkbox-custom {
+    border-color: var(--primary-color-dark);
+    box-shadow: 0 0 8px rgba(var(--primary-rgb), 0.4);
+}
+
+/* Estilo quando o checkbox está MARCADO */
+.curso-checkbox-input:checked + .curso-checkbox-custom {
+    background-color: var(--primary-color); /* Fundo da cor principal */
+    border-color: var(--primary-color); /* Borda da cor principal */
+}
+
+/* Adiciona o ícone de 'check' quando marcado */
+.curso-checkbox-input:checked + .curso-checkbox-custom::after {
+    content: '✓'; /* Caractere de checkmark */
+    color: #fff; /* Cor do checkmark */
+    font-size: 20px; /* Tamanho do checkmark */
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Centraliza verticalmente */
+    width: 100%; /* Centraliza horizontalmente */
+}
+
+/* Estilo quando o card é selecionado (bordas e sombra) */
+.curso-card.selected {
+    border-color: var(--primary-color); /* Borda mais forte quando selecionado */
+    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.2); /* Sombra mais visível */
 }

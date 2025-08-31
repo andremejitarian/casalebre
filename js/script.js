@@ -79,9 +79,13 @@ $(document).ready(function() {
             const referencePrice = course.precos.mensal; // Preço de referência para exibição no card
             const cardHtml = `
                 <div class="curso-card" data-course-id="${course.id}">
+                    <!-- Novo wrapper para o checkbox personalizado -->
+                    <div class="curso-checkbox-wrapper">
+                        <input type="checkbox" id="curso-${course.id}" name="curso-${course.id}" value="${course.id}" class="curso-checkbox-input">
+                        <span class="curso-checkbox-custom"></span>
+                    </div>
                     <div class="card-header">
                         <img src="${course.imagem}" alt="${course.nome}" class="card-image">
-                        <input type="checkbox" id="curso-${course.id}" name="curso-${course.id}" value="${course.id}" class="curso-checkbox">
                     </div>
                     <div class="card-body">
                         <h3 class="card-title">${course.nome}</h3>
@@ -134,28 +138,29 @@ $(document).ready(function() {
     }
 
     // Função para anexar event listeners específicos aos cards de cursos (NOVA FUNÇÃO)
-    function attachCourseCardEventListeners() {
-        // Listener delegado para checkboxes dentro do courses-grid
-        $('#cursosGridContainer').on('change', '.curso-checkbox', function() {
-            const courseId = $(this).val();
-            const $card = $(this).closest('.curso-card');
-            if (this.checked) {
-                $card.addClass('selected');
-            } else {
-                $card.removeClass('selected');
-            }
-            updateSummaryAndTotal(); // Recalcula o total ao selecionar/desselecionar
-        });
+function attachCourseCardEventListeners() {
+    // Listener delegado para checkboxes dentro do courses-grid
+    $('#cursosGridContainer').on('change', '.curso-checkbox-input', function() { // <-- ALTERADO AQUI
+        const courseId = $(this).val();
+        const $card = $(this).closest('.curso-card');
+        if (this.checked) {
+            $card.addClass('selected');
+        } else {
+            $card.removeClass('selected');
+        }
+        updateSummaryAndTotal();
+        updateSelectedCoursesDisplay();
+    });
 
-        // Listener delegado para botões "Ver Mais Detalhes"
-        $('#cursosGridContainer').on('click', '.btn-ver-mais', function() {
-            const courseId = $(this).data('course-id');
-            const course = allCoursesData.find(c => c.id === courseId);
-            if (course) {
-                showCourseDetailsModal(course);
-            }
-        });
-    }
+    // Listener delegado para botões "Ver Mais Detalhes"
+    $('#cursosGridContainer').on('click', '.btn-ver-mais', function() {
+        const courseId = $(this).data('course-id');
+        const course = allCoursesData.find(c => c.id === courseId);
+        if (course) {
+            showCourseDetailsModal(course);
+        }
+    });
+}
 
     // Função para validar campos
     function validateField(inputElement, validationFn = null, errorMessage = 'Campo obrigatório.') {
@@ -185,19 +190,18 @@ $(document).ready(function() {
     }
 
     // Valida seleção de cursos (AJUSTADO PARA O NOVO ID)
-    function validateCourseSelection() {
-        const $checkedCourses = $('.curso-checkbox:checked'); // Usando a nova classe do checkbox do card
-        // O error-message está logo abaixo do cursosGridContainer no HTML
-        const $errorDiv = $('#cursosGridContainer').siblings('.error-message');
-        
-        if ($checkedCourses.length === 0) {
-            $errorDiv.text('Selecione pelo menos um curso.').show();
-            return false;
-        } else {
-            $errorDiv.hide().text('');
-            return true;
-        }
+function validateCourseSelection() {
+    const $checkedCourses = $('.curso-checkbox-input:checked'); // <-- ALTERADO AQUI
+    const $errorDiv = $('#cursosGridContainer').siblings('.error-message');
+    
+    if ($checkedCourses.length === 0) {
+        $errorDiv.text('Selecione pelo menos um curso.').show();
+        return false;
+    } else {
+        $errorDiv.hide().text('');
+        return true;
     }
+}
 
     // Valida o passo atual antes de avançar (AJUSTADO)
     function validateCurrentStep() {
@@ -255,8 +259,8 @@ $(document).ready(function() {
         };
 
         // Coleta cursos selecionados (AJUSTADO)
-        $('.curso-checkbox:checked').each(function() { // Usando a nova classe
-            formData.cursosSelecionados.push($(this).val());
+        $('.curso-checkbox-input:checked').each(function() { // <-- ALTERADO AQUI
+        formData.cursosSelecionados.push($(this).val());
         });
 
         // Adiciona os detalhes de preço calculados
@@ -281,7 +285,7 @@ $(document).ready(function() {
         }
 
         const selectedCourseIds = [];
-        $('.curso-checkbox:checked').each(function() {
+        $('.curso-checkbox-input:checked').each(function() { // <-- ALTERADO AQUI
             selectedCourseIds.push($(this).val());
         });
 
@@ -403,13 +407,16 @@ $(document).ready(function() {
 
             // Seleciona os cursos (AJUSTADO PARA OS NOVOS CARDS)
             if (aprendiz.cursos && Array.isArray(aprendiz.cursos)) {
-                aprendiz.cursos.forEach(courseId => { // Assume que 'cursos' no JSON de pré-preenchimento são IDs
-                    const $checkbox = $(`#curso-${courseId}`);
-                    if ($checkbox.length) {
-                        $checkbox.prop('checked', true).trigger('change'); // Marca e dispara o evento de mudança
-                    }
-                });
+            aprendiz.cursos.forEach(courseId => { 
+            // Altera a forma de encontrar o checkbox para usar o ID
+            const $checkbox = $(`#curso-${courseId}`); // O ID ainda é único para o input
+            if ($checkbox.length) {
+                $checkbox.prop('checked', true); 
+                // Certifique-se que o card visualmente também é atualizado
+                $checkbox.closest('.curso-card').addClass('selected');
             }
+        });
+    }
         }
 
         // Outros dados
@@ -433,6 +440,7 @@ $(document).ready(function() {
         }
 
         updateSummaryAndTotal(); // Chama para garantir que o resumo está atualizado após pré-preenchimento
+        updateSelectedCoursesDisplay();
     }
 
     // Função para processar a submissão do formulário
