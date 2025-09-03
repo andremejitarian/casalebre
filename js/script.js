@@ -9,8 +9,8 @@ $(document).ready(function() {
     let allCoursesData = [];
 
     // URLs dos webhooks
-    const WEBHOOK_CONSULTA_URL = 'https://criadordigital-n8n-webhook.kttqgl.easypanel.host/webhook/consulta-matricula';
-    const WEBHOOK_SUBMISSAO_URL = 'https://criadordigital-n8n-webhook.kttqgl.easypanel.host/webhook/envio-matricula';
+    const WEBHOOK_CONSULTA_URL = 'https://criadordigital-n8n-webhook.kttqgl.easypanel.host/webhook/consulta-matriculav2';
+    const WEBHOOK_SUBMISSAO_URL = 'https://criadordigital-n8n-webhook.kttqgl.easypanel.host/webhook/envio-matriculav2';
 
     // Inicializa as máscaras para os campos
     function initializeMasks() {
@@ -650,5 +650,6 @@ function validateCourseSelection() {
     }
 
     initForm();
+
 
 });
