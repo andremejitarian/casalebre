@@ -100,7 +100,10 @@ $(document).ready(function() {
                             ${course.vagasDisponiveis !== undefined ? `<li><strong>Vagas:</strong> <span>${course.vagasDisponiveis === 0 ? '<span class="esgotado">Esgotado</span>' : course.vagasDisponiveis}</span></li>` : ''}
                             ${course.detalhes.quantidade_minima_alunos !== undefined ? `<li><strong>Mín. Alunos:</strong> <span>${course.detalhes.quantidade_minima_alunos}</span></li>` : ''}
                         </ul>
-                        <button type="button" class="btn-ver-mais" data-course-id="${course.id}">Ver Mais Detalhes</button>
+                        <div class="card-actions">
+                            <button type="button" class="btn-ver-mais" data-course-id="${course.id}">Ver Mais Detalhes</button>
+                            <button type="button" class="btn-selecionar" data-course-id="${course.id}">Selecionar</button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -161,6 +164,17 @@ function attachCourseCardEventListeners() {
         // Atualiza resumo e exibição após a alteração (agora sempre no estado único selecionado)
         updateSummaryAndTotal();
         if (typeof updateSelectedCoursesDisplay === 'function') updateSelectedCoursesDisplay();
+
+        // Atualiza texto do botão Selecionar nos cards: somente o marcado mostra 'Selecionado'
+        $('#cursosGridContainer .btn-selecionar').each(function() {
+            const cid = $(this).data('course-id');
+            const $chk = $(`#curso-${cid}`);
+            if ($chk.prop('checked')) {
+                $(this).text('Selecionado').attr('aria-pressed', 'true');
+            } else {
+                $(this).text('Selecionar').attr('aria-pressed', 'false');
+            }
+        });
     });
 
     // Listener delegado para botões "Ver Mais Detalhes"
@@ -181,6 +195,17 @@ function attachCourseCardEventListeners() {
             if ($checkbox.length) {
                 const newState = !$checkbox.prop('checked');
                 $checkbox.prop('checked', newState).trigger('change');
+            }
+        });
+
+        // Botão Selecionar: confirma a seleção do curso (sincroniza com o input oculto)
+        $('#cursosGridContainer').on('click', '.btn-selecionar', function(e) {
+            e.preventDefault();
+            const courseId = $(this).data('course-id');
+            const $checkbox = $(`#curso-${courseId}`);
+            if ($checkbox.length) {
+                // marcar este checkbox (isso disparará o handler de change que lida com single-selection)
+                $checkbox.prop('checked', true).trigger('change');
             }
         });
 }
@@ -440,6 +465,7 @@ function validateCourseSelection() {
                 if ($checkbox.length) {
                     $checkbox.prop('checked', true);
                     $checkbox.closest('.curso-card').addClass('selected');
+                    $checkbox.trigger('change');
                 }
             }
         }
