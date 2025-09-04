@@ -171,6 +171,18 @@ function attachCourseCardEventListeners() {
             showCourseDetailsModal(course);
         }
     });
+
+        // Tornar o wrapper do checkbox clicável: alterna o estado do input e dispara change
+        $('#cursosGridContainer').on('click', '.curso-checkbox-wrapper, .curso-checkbox-custom', function(e) {
+            // evita que cliques em elementos internos (como links/button) causem toggle indesejado
+            e.preventDefault();
+            const $wrapper = $(this).closest('.curso-checkbox-wrapper');
+            const $checkbox = $wrapper.find('.curso-checkbox-input');
+            if ($checkbox.length) {
+                const newState = !$checkbox.prop('checked');
+                $checkbox.prop('checked', newState).trigger('change');
+            }
+        });
 }
 
     // Função para validar campos
