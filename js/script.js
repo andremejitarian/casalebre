@@ -77,12 +77,12 @@ $(document).ready(function() {
 
         allCoursesData.forEach(course => {
             const referencePrice = course.precos.mensal; // Preço de referência para exibição no card
-            const cardHtml = `
-                <div class="curso-card" data-course-id="${course.id}">
+        const cardHtml = `
+        <div class="curso-card" data-course-id="${course.id}" role="radio" tabindex="0" aria-checked="false">
                     <!-- Novo wrapper para o checkbox personalizado -->
                     <div class="curso-checkbox-wrapper">
-                        <input type="radio" id="curso-${course.id}" name="cursoSelection" value="${course.id}" class="curso-checkbox-input" aria-label="Selecionar curso ${course.nome}">
-                        <span class="curso-checkbox-custom" role="presentation"></span>
+            <input type="radio" id="curso-${course.id}" name="cursoSelection" value="${course.id}" class="curso-checkbox-input" aria-label="Selecionar curso ${course.nome}">
+            <span class="curso-checkbox-custom radio-visual" role="presentation" aria-hidden="true"></span>
                     </div>
                     <div class="card-header">
                         <img src="${course.imagem}" alt="${course.nome}" class="card-image">
@@ -102,7 +102,7 @@ $(document).ready(function() {
                         </ul>
                         <div class="card-actions">
                             <button type="button" class="btn-ver-mais" data-course-id="${course.id}">Ver Mais Detalhes</button>
-                            <button type="button" class="btn-selecionar" data-course-id="${course.id}">Selecionar</button>
+                            <button type="button" class="btn btn-ver-mais btn-selecionar" data-course-id="${course.id}" aria-pressed="false">Selecionar</button>
                         </div>
                     </div>
                 </div>
@@ -147,10 +147,13 @@ function attachCourseCardEventListeners() {
         const courseId = $(this).val();
         const $card = $(this).closest('.curso-card');
 
-        // Radios garantem seleção única; atualiza estado visual
-        $('#cursosGridContainer .curso-card').removeClass('selected');
+        // Radios garantem seleção única; atualiza estado visual e aria-checked
+        $('#cursosGridContainer .curso-card').each(function() {
+            const $c = $(this);
+            $c.removeClass('selected').attr('aria-checked', 'false');
+        });
         if (this.checked) {
-            $card.addClass('selected');
+            $card.addClass('selected').attr('aria-checked', 'true');
         }
 
         // Atualiza resumo e exibição
@@ -198,6 +201,19 @@ function attachCourseCardEventListeners() {
             if ($checkbox.length) {
                 // marcar este checkbox (isso disparará o handler de change que lida com single-selection)
                 $checkbox.prop('checked', true).trigger('change');
+            }
+        });
+
+        // Keyboard support: permitir selecionar com Enter/Space quando o card (role=radio) tem o foco
+        $('#cursosGridContainer').on('keydown', '.curso-card[role="radio"]', function(e) {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault();
+                const courseId = $(this).data('course-id');
+                const $radio = $(`#curso-${courseId}`);
+                if ($radio.length) {
+                    $radio.prop('checked', true).trigger('change');
+                    $(this).focus();
+                }
             }
         });
 }

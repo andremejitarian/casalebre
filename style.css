@@ -662,12 +662,7 @@ body {
     display: none !important;
 }
 
-/* ESTILOS ANTIGOS, QUE SERÃO SUBSTITUÍDOS PELOS CARDS */
-.courses-selection {
-    /*border: 1px solid #ddd;*/ /* REMOVIDO: Borda e padding movidos para .courses-grid */
-    /*padding: 15px;*/
-    /*background: #f9f9f9;*/
-}
+/* ESTILOS ANTIGOS, REMOVIDOS */
 
 .course-category {
     margin-bottom: 20px;
@@ -1136,7 +1131,7 @@ body {
     height: 28px;
     background-color: #fff; /* Fundo branco */
     border: 2px solid var(--primary-color); /* Borda da cor principal */
-    border-radius: 6px; /* Borda levemente arredondada */
+    border-radius: 50%; /* parecer um rádio circular */
     transition: all 0.2s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
@@ -1155,15 +1150,37 @@ body {
 
 /* Adiciona o ícone de 'check' quando marcado */
 .curso-checkbox-input:checked + .curso-checkbox-custom::after {
-    content: '✓'; /* Caractere de checkmark */
+    content: '';
+    /* small inner dot for radio */
     color: #fff; /* Cor do checkmark */
-    font-size: 20px; /* Tamanho do checkmark */
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%; /* Centraliza verticalmente */
-    width: 100%; /* Centraliza horizontalmente */
+    display: block;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-radius: 50%;
+    margin: 7px auto; /* center inside 28px */
+}
+
+/* foco do cartão para teclado (acessibilidade) */
+.curso-card[role="radio"]:focus {
+    outline: 3px solid rgba(var(--primary-rgb), 0.15);
+    box-shadow: 0 6px 18px rgba(var(--primary-rgb), 0.12);
+}
+
+/* alinhar btn-selecionar com btn-ver-mais mantendo mesma aparência */
+.btn-ver-mais.btn-selecionar {
+    background-color: #f0f0f0;
+    color: #5B5B5B;
+    border: 1px solid #ddd;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.btn-ver-mais.btn-selecionar.selecionado {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color-light));
+    color: #ffffff;
+    border-color: var(--primary-color);
 }
 
 /* Estilo quando o card é selecionado (bordas e sombra) */
