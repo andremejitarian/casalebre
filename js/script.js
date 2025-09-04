@@ -143,13 +143,24 @@ function attachCourseCardEventListeners() {
     $('#cursosGridContainer').on('change', '.curso-checkbox-input', function() { // <-- ALTERADO AQUI
         const courseId = $(this).val();
         const $card = $(this).closest('.curso-card');
+
+        // Enforce single selection: if this checkbox was checked, uncheck all others
         if (this.checked) {
+            // Uncheck other checkboxes and remove their selected class
+            $('#cursosGridContainer .curso-checkbox-input').not(this).each(function() {
+                $(this).prop('checked', false);
+                $(this).closest('.curso-card').removeClass('selected');
+            });
+            // Mark this card as selected
             $card.addClass('selected');
         } else {
+            // If it was unchecked, just remove visual selection
             $card.removeClass('selected');
         }
+
+        // Atualiza resumo e exibição após a alteração (agora sempre no estado único selecionado)
         updateSummaryAndTotal();
-        updateSelectedCoursesDisplay();
+        if (typeof updateSelectedCoursesDisplay === 'function') updateSelectedCoursesDisplay();
     });
 
     // Listener delegado para botões "Ver Mais Detalhes"
@@ -193,9 +204,14 @@ function attachCourseCardEventListeners() {
 function validateCourseSelection() {
     const $checkedCourses = $('.curso-checkbox-input:checked'); // <-- ALTERADO AQUI
     const $errorDiv = $('#cursosGridContainer').siblings('.error-message');
-    
+
     if ($checkedCourses.length === 0) {
-        $errorDiv.text('Selecione pelo menos um curso.').show();
+        $errorDiv.text('Selecione um curso.').show();
+        return false;
+    } else if ($checkedCourses.length > 1) {
+        // Shouldn't normally happen because selection is enforced to single,
+        // but validate defensively in case JS enforcement fails.
+        $errorDiv.text('Selecione apenas um curso.').show();
         return false;
     } else {
         $errorDiv.hide().text('');
@@ -405,18 +421,15 @@ function validateCourseSelection() {
             // $('#restricaoAlimentarAprendiz').val(aprendiz.restricaoAlimentar);
             // $('#questaoSaudeAprendiz').val(aprendiz.questaoSaude);
 
-            // Seleciona os cursos (AJUSTADO PARA OS NOVOS CARDS)
-            if (aprendiz.cursos && Array.isArray(aprendiz.cursos)) {
-            aprendiz.cursos.forEach(courseId => { 
-            // Altera a forma de encontrar o checkbox para usar o ID
-            const $checkbox = $(`#curso-${courseId}`); // O ID ainda é único para o input
-            if ($checkbox.length) {
-                $checkbox.prop('checked', true); 
-                // Certifique-se que o card visualmente também é atualizado
-                $checkbox.closest('.curso-card').addClass('selected');
+            // Seleciona apenas o primeiro curso (para compatibilidade com seleção única)
+            if (aprendiz.cursos && Array.isArray(aprendiz.cursos) && aprendiz.cursos.length > 0) {
+                const firstCourseId = aprendiz.cursos[0];
+                const $checkbox = $(`#curso-${firstCourseId}`);
+                if ($checkbox.length) {
+                    $checkbox.prop('checked', true);
+                    $checkbox.closest('.curso-card').addClass('selected');
+                }
             }
-        });
-    }
         }
 
         // Outros dados
@@ -440,8 +453,26 @@ function validateCourseSelection() {
         }
 
         updateSummaryAndTotal(); // Chama para garantir que o resumo está atualizado após pré-preenchimento
-        updateSelectedCoursesDisplay();
+            if (typeof updateSelectedCoursesDisplay === 'function') updateSelectedCoursesDisplay();
     }
+
+        // Atualiza uma exibição opcional dos cursos selecionados (defensiva)
+        function updateSelectedCoursesDisplay() {
+            const selectedCourseIds = $('.curso-checkbox-input:checked').map(function() { return $(this).val(); }).get();
+            const $display = $('#selectedCoursesList'); // elemento opcional no HTML
+            if ($display.length) {
+                if (selectedCourseIds.length === 0) {
+                    $display.text('Nenhum curso selecionado');
+                } else {
+                    const names = selectedCourseIds.map(id => {
+                        const c = allCoursesData.find(x => x.id === id);
+                        return c ? c.nome : id;
+                    });
+                    $display.text(names.join(', '));
+                }
+            }
+            // se não houver elemento, nada é feito — função serve apenas para prevenir erros
+        }
 
     // Função para processar a submissão do formulário
     async function processFormSubmission() {
