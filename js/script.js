@@ -81,8 +81,8 @@ $(document).ready(function() {
                 <div class="curso-card" data-course-id="${course.id}">
                     <!-- Novo wrapper para o checkbox personalizado -->
                     <div class="curso-checkbox-wrapper">
-                        <input type="checkbox" id="curso-${course.id}" name="curso-${course.id}" value="${course.id}" class="curso-checkbox-input">
-                        <span class="curso-checkbox-custom"></span>
+                        <input type="radio" id="curso-${course.id}" name="cursoSelection" value="${course.id}" class="curso-checkbox-input" aria-label="Selecionar curso ${course.nome}">
+                        <span class="curso-checkbox-custom" role="presentation"></span>
                     </div>
                     <div class="card-header">
                         <img src="${course.imagem}" alt="${course.nome}" class="card-image">
@@ -142,37 +142,29 @@ $(document).ready(function() {
 
     // Função para anexar event listeners específicos aos cards de cursos (NOVA FUNÇÃO)
 function attachCourseCardEventListeners() {
-    // Listener delegado para checkboxes dentro do courses-grid
-    $('#cursosGridContainer').on('change', '.curso-checkbox-input', function() { // <-- ALTERADO AQUI
+    // Listener delegado para radios dentro do courses-grid
+    $('#cursosGridContainer').on('change', '.curso-checkbox-input', function() {
         const courseId = $(this).val();
         const $card = $(this).closest('.curso-card');
 
-        // Enforce single selection: if this checkbox was checked, uncheck all others
+        // Radios garantem seleção única; atualiza estado visual
+        $('#cursosGridContainer .curso-card').removeClass('selected');
         if (this.checked) {
-            // Uncheck other checkboxes and remove their selected class
-            $('#cursosGridContainer .curso-checkbox-input').not(this).each(function() {
-                $(this).prop('checked', false);
-                $(this).closest('.curso-card').removeClass('selected');
-            });
-            // Mark this card as selected
             $card.addClass('selected');
-        } else {
-            // If it was unchecked, just remove visual selection
-            $card.removeClass('selected');
         }
 
-        // Atualiza resumo e exibição após a alteração (agora sempre no estado único selecionado)
+        // Atualiza resumo e exibição
         updateSummaryAndTotal();
         if (typeof updateSelectedCoursesDisplay === 'function') updateSelectedCoursesDisplay();
 
-        // Atualiza texto do botão Selecionar nos cards: somente o marcado mostra 'Selecionado'
+        // Atualiza texto do botão Selecionar nos cards
         $('#cursosGridContainer .btn-selecionar').each(function() {
             const cid = $(this).data('course-id');
-            const $chk = $(`#curso-${cid}`);
-            if ($chk.prop('checked')) {
-                $(this).text('Selecionado').attr('aria-pressed', 'true');
+            const $rad = $(`#curso-${cid}`);
+            if ($rad.prop('checked')) {
+                $(this).text('Selecionado').addClass('selecionado').attr('aria-pressed', 'true');
             } else {
-                $(this).text('Selecionar').attr('aria-pressed', 'false');
+                $(this).text('Selecionar').removeClass('selecionado').attr('aria-pressed', 'false');
             }
         });
     });
@@ -193,8 +185,8 @@ function attachCourseCardEventListeners() {
             const $wrapper = $(this).closest('.curso-checkbox-wrapper');
             const $checkbox = $wrapper.find('.curso-checkbox-input');
             if ($checkbox.length) {
-                const newState = !$checkbox.prop('checked');
-                $checkbox.prop('checked', newState).trigger('change');
+                // Como agora usamos radios, sempre marcamos este radio (isso desmarcará os outros automaticamente)
+                $checkbox.prop('checked', true).trigger('change');
             }
         });
 

@@ -991,6 +991,49 @@ body {
     transform: translateY(-2px);
 }
 
+/* Ações dentro do card (botões) */
+.card-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.btn-selecionar {
+    background: #ffffff;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.18s ease;
+}
+
+.btn-selecionar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(var(--primary-rgb), 0.12);
+}
+
+/* Estado quando o curso está selecionado */
+.btn-selecionar.selecionado {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color-light));
+    color: #ffffff;
+    border-color: var(--primary-color);
+}
+
+/* Pequena animação de confirmação */
+.btn-selecionar.selecionado {
+    animation: pop 0.22s ease;
+}
+
+@keyframes pop {
+    0% { transform: scale(0.98); }
+    60% { transform: scale(1.06); }
+    100% { transform: scale(1); }
+}
+
 /* Estilos para o resumo dos cursos selecionados na Etapa 5 */
 .summary-course-item {
     padding: 8px 0;
