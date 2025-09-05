@@ -275,7 +275,6 @@ function validateCourseSelection() {
             isValid = validateField($('#emailResponsavel'), (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), 'Email inválido.') && isValid;
             isValid = validateField($('#telefoneResponsavel'), (val) => val.replace(/\D/g, '').length === 11, 'Telefone inválido.') && isValid;
             isValid = validateField($('#cpfResponsavel'), (val) => isValidCPF(val), 'CPF inválido.') && isValid;
-            isValid = validateField($('#emergenciaQuemChamar'), null, 'Campo obrigatório.') && isValid;
 
             const $howKnowCheckboxes = $('input[name="comoSoube"]');
             const $howKnowErrorDiv = $('.how-know-error');
@@ -441,10 +440,6 @@ function validateCourseSelection() {
             $('#cpfResponsavel').val(data.responsavel.cpf).trigger('input');
             $('#emailResponsavel').val(data.responsavel.email);
             $('#telefoneResponsavel').val(data.responsavel.telefone).trigger('input');
-        }
-
-        if (data.emergenciaQuemChamar) {
-            $('#emergenciaQuemChamar').val(data.emergenciaQuemChamar);
         }
 
         // Como ficou sabendo
@@ -730,3 +725,4 @@ function validateCourseSelection() {
 
 
 });
+
