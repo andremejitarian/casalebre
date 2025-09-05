@@ -1,9 +1,10 @@
 $(document).ready(function() {
     let currentStep = 1;
-    const totalSteps = 4; // Ajustado para 4, já que o step-terms não está no HTML
+    const totalSteps = 4;
     let pricesDataLoaded = false;
     let prefilledData = null;
     let amigoLebreCategoria = null;
+    let selectedCourseFromUrl = null; // Nova variável para armazenar o curso da URL
 
     // --- NOVA VARIÁVEL GLOBAL PARA OS DADOS DOS CURSOS ---
     let allCoursesData = [];
@@ -11,6 +12,24 @@ $(document).ready(function() {
     // URLs dos webhooks
     const WEBHOOK_CONSULTA_URL = 'https://criadordigital-n8n-webhook.kttqgl.easypanel.host/webhook/consulta-matriculav2';
     const WEBHOOK_SUBMISSAO_URL = 'https://criadordigital-n8n-webhook.kttqgl.easypanel.host/webhook/envio-matriculav2';
+
+    // NOVA FUNÇÃO: Verifica o parâmetro 'curso' na URL
+    function checkCourseParam() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const cursoParam = urlParams.get('curso');
+        
+        if (cursoParam) {
+            console.log('Parâmetro curso detectado:', cursoParam);
+            selectedCourseFromUrl = cursoParam;
+            return cursoParam;
+        }
+        return null;
+    }
+
+    // NOVA FUNÇÃO: Encontra o curso pelos dados do JSON
+    function findCourseById(courseId) {
+        return allCoursesData.find(course => course.id === courseId);
+    }
 
     // Inicializa as máscaras para os campos
     function initializeMasks() {
@@ -21,95 +40,171 @@ $(document).ready(function() {
 
     // Carrega dados e inicializa o formulário (MODIFICADO)
     async function initForm() {
-        // Assume que priceCalculator.loadPriceData() agora carrega o cursos.json
-        // e expõe os dados dos cursos via priceCalculator.getAllCourses()
         pricesDataLoaded = await priceCalculator.loadPriceData(); 
         if (pricesDataLoaded) {
-            allCoursesData = priceCalculator.getAllCourses(); // Popula a nova variável global
+            allCoursesData = priceCalculator.getAllCourses();
             initializeMasks();
-            // checkMatriculaParam() e populateCourseSelection() são chamados aqui.
-            // A ordem é importante: populateCourseSelection() deve ser chamado antes de 
-            // checkMatriculaParam() para que os cards existam na DOM antes de tentar marcá-los.
-            populateCourseSelection(); 
+            
+            // Verifica se há um curso específico na URL
+            const courseFromUrl = checkCourseParam();
+            
+            if (courseFromUrl) {
+                // Se há um curso na URL, exibe informações do curso
+                const courseData = findCourseById(courseFromUrl);
+                if (courseData) {
+                    populateCourseInfo(courseData);
+                    // Pré-seleciona o curso automaticamente
+                    preselectCourse(courseFromUrl);
+                } else {
+                    console.error('Curso não encontrado:', courseFromUrl);
+                    // Fallback para seleção normal
+                    populateCourseSelection();
+                }
+            } else {
+                // Se não há curso na URL, mantém a lógica atual
+                populateCourseSelection();
+            }
+            
             await checkMatriculaParam(); 
             setupEventListeners(); 
-            updateSummaryAndTotal(); // Garante que o resumo inicial esteja correto
-            showStep(currentStep); // Exibe o primeiro passo
+            updateSummaryAndTotal();
+            showStep(currentStep);
         } else {
             $('#registrationForm').html('<p class="error-message" style="display: block; text-align: center;">Não foi possível carregar os dados do formulário. Por favor, tente novamente mais tarde.</p>');
         }
     }
 
-    // Exibe um passo específico do formulário (AJUSTADO PARA OS IDs DO HTML ATUAL)
-    function showStep(stepNum) {
-        $('.form-step').removeClass('active');
-        let stepId;
-        if (stepNum === 1) stepId = '#step-1';
-        else if (stepNum === 2) stepId = '#step-2';
-        else if (stepNum === 3) stepId = '#step-3';
-        else if (stepNum === 4) stepId = '#step-4'; // Este é o passo de pagamento/resumo
-        else if (stepNum === 'success') stepId = '#step-success';
+    // NOVA FUNÇÃO: Popula informações específicas do curso
+    function populateCourseInfo(courseData) {
+        const $cursosGridContainer = $('#cursosGridContainer');
+        $cursosGridContainer.empty();
 
-        $(stepId).addClass('active');
-        currentStep = stepNum;
-
-        const isSuccessStep = (stepId === '#step-success');
-        const isFinalDataStep = (stepId === '#step-4'); 
-        const isWelcomeStep = (stepId === '#step-1');
-
-        $('.btn-prev').toggle(!isWelcomeStep && !isSuccessStep);
-        $('.btn-next').toggle(!isFinalDataStep && !isSuccessStep);
-        $('.btn-submit').toggle(isFinalDataStep);
-        $('#goToPaymentBtn').toggle(false);
-
-        $('html, body').animate({ scrollTop: 0 }, 500);
-    }
-
-// Popula a seleção de cursos (REESCRITO PARA CARDS)
-function populateCourseSelection() {
-    const $cursosGridContainer = $('#cursosGridContainer');
-    $cursosGridContainer.empty(); // Limpa a mensagem "Carregando cursos..." ou conteúdo antigo
-
-    if (allCoursesData.length === 0) {
-        $cursosGridContainer.html('<p class="error-message">Nenhum curso disponível no momento.</p>');
-        return;
-    }
-
-    allCoursesData.forEach(course => {
-        const referencePrice = course.precos.mensal; // Preço de referência para exibição no card
-    const cardHtml = `
-    <div class="curso-card" data-course-id="${course.id}" role="radio" tabindex="0" aria-checked="false">
-                <!-- Novo wrapper para o checkbox personalizado -->
-                <div class="curso-checkbox-wrapper">
-        <input type="radio" id="curso-${course.id}" name="cursoSelection" value="${course.id}" class="curso-checkbox-input" aria-label="Selecionar curso ${course.nome}">
-        <span class="curso-checkbox-custom radio-visual" role="presentation" aria-hidden="true"></span>
-                </div>
-                <div class="card-header">
-                    <img src="${course.imagem}" alt="${course.nome}" class="card-image">
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title">${course.nome}</h3>
-                    <p class="card-subtitle">${course.subtitulo}</p>
-                    <p class="card-description-short">${course.descricaoCurta}</p>
-                    <ul class="card-details">
-                        <li><strong>Dia:</strong> <span>${course.detalhes.dia}</span></li>
-                        <li><strong>Horário:</strong> <span>${course.detalhes.horario}</span></li>
-                        <li><strong>Idade:</strong> <span>${course.detalhes.idade_min} a ${course.detalhes.idade_max} anos</span></li>
-                        <li><strong>Professor:</strong> <span>${course.detalhes.professor}</span></li>
-                        <li><strong>Preço Mensal:</strong> <span class="course-price">${priceCalculator.formatCurrency(referencePrice)}</span></li>
-                        ${course.vagasDisponiveis !== undefined ? `<li><strong>Vagas:</strong> <span>${course.vagasDisponiveis === 0 ? '<span class="esgotado">Esgotado</span>' : course.vagasDisponiveis}</span></li>` : ''}
-                        ${course.detalhes.quantidade_minima_alunos !== undefined ? `<li><strong>Mín. Alunos:</strong> <span>${course.detalhes.quantidade_minima_alunos}</span></li>` : ''}
-                    </ul>
-                    <div class="card-actions">
-                        <button type="button" class="btn-detalhes" data-course-id="${course.id}">Ver Mais Detalhes</button>
-                        <button type="button" class="btn btn-selecionar" data-course-id="${course.id}" aria-pressed="false">Selecionar</button>
+        const courseInfoHtml = `
+            <div class="course-info-display">
+                <div class="course-header">
+                    <img src="${courseData.imagem}" alt="${courseData.nome}" class="course-main-image">
+                    <div class="course-title-section">
+                        <h2 class="course-main-title">${courseData.nome}</h2>
+                        <h3 class="course-subtitle">${courseData.subtitulo}</h3>
+                        <p class="course-description">${courseData.descricaoCurta}</p>
                     </div>
+                </div>
+
+                <div class="course-details-grid">
+                    <div class="detail-card">
+                        <h4>📅 Cronograma</h4>
+                        <ul>
+                            <li><strong>Dia:</strong> ${courseData.detalhes.dia}</li>
+                            <li><strong>Horário:</strong> ${courseData.detalhes.horario}</li>
+                            <li><strong>Período:</strong> ${courseData.detalhes.data_inicio} a ${courseData.detalhes.data_termino}</li>
+                            <li><strong>Total de Aulas:</strong> ${courseData.detalhes.aulas_quantidade} aulas</li>
+                            <li><strong>Carga Horária:</strong> ${courseData.detalhes.carga_horaria_total}</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-card">
+                        <h4>🎯 Informações Gerais</h4>
+                        <ul>
+                            <li><strong>Idade:</strong> ${courseData.detalhes.idade_min} a ${courseData.detalhes.idade_max} anos</li>
+                            <li><strong>Professor:</strong> ${courseData.detalhes.professor}</li>
+                            <li><strong>Contato:</strong> ${courseData.detalhes.professor_contato_tel}</li>
+                            <li><strong>Material:</strong> ${courseData.detalhes.material}</li>
+                            <li><strong>Mín. Alunos:</strong> ${courseData.detalhes.quantidade_minima_alunos}</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-card">
+                        <h4>💰 Valores</h4>
+                        <ul>
+                            <li><strong>Mensal:</strong> <span class="price-highlight">${priceCalculator.formatCurrency(courseData.precos.mensal)}</span></li>
+                            <li><strong>Bimestral:</strong> <span class="price-highlight">${priceCalculator.formatCurrency(courseData.precos.bimestral)}</span></li>
+                            <li><strong>Quadrimestral:</strong> <span class="price-highlight">${priceCalculator.formatCurrency(courseData.precos.quadrimestral)}</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-card">
+                        <h4>📋 Sobre o Curso</h4>
+                        <p>${courseData.descricaoCompleta}</p>
+                        ${courseData.vagasDisponiveis !== undefined ? 
+                            `<p><strong>Vagas Disponíveis:</strong> 
+                            ${courseData.vagasDisponiveis === 0 ? 
+                                '<span class="esgotado">Esgotado</span>' : 
+                                `<span class="vagas-disponiveis">${courseData.vagasDisponiveis}</span>`
+                            }</p>` : ''
+                        }
+                    </div>
+                </div>
+
+                <!-- Campo oculto para garantir que o curso seja selecionado -->
+                <input type="radio" id="curso-${courseData.id}" name="cursoSelection" value="${courseData.id}" 
+                       class="curso-checkbox-input" checked style="display: none;">
+                
+                <div class="course-confirmation">
+                    <p class="confirmation-text">✅ Este curso foi automaticamente selecionado para sua inscrição.</p>
                 </div>
             </div>
         `;
-        $cursosGridContainer.append(cardHtml);
-    });
-}
+
+        $cursosGridContainer.html(courseInfoHtml);
+        
+        // Atualiza o título da etapa
+        $('#step-3 .step-title').text('Informações do Curso');
+    }
+
+    // NOVA FUNÇÃO: Pré-seleciona um curso específico
+    function preselectCourse(courseId) {
+        // Marca o curso como selecionado
+        const $courseInput = $(`#curso-${courseId}`);
+        if ($courseInput.length) {
+            $courseInput.prop('checked', true);
+            console.log('Curso pré-selecionado:', courseId);
+        }
+    }
+
+    // Mantém a função original para quando não há curso na URL
+    function populateCourseSelection() {
+        const $cursosGridContainer = $('#cursosGridContainer');
+        $cursosGridContainer.empty();
+
+        if (allCoursesData.length === 0) {
+            $cursosGridContainer.html('<p class="error-message">Nenhum curso disponível no momento.</p>');
+            return;
+        }
+
+        allCoursesData.forEach(course => {
+            const referencePrice = course.precos.mensal;
+            const cardHtml = `
+                <div class="curso-card" data-course-id="${course.id}" role="radio" tabindex="0" aria-checked="false">
+                    <div class="curso-checkbox-wrapper">
+                        <input type="radio" id="curso-${course.id}" name="cursoSelection" value="${course.id}" class="curso-checkbox-input" aria-label="Selecionar curso ${course.nome}">
+                        <span class="curso-checkbox-custom radio-visual" role="presentation" aria-hidden="true"></span>
+                    </div>
+                    <div class="card-header">
+                        <img src="${course.imagem}" alt="${course.nome}" class="card-image">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">${course.nome}</h3>
+                        <p class="card-subtitle">${course.subtitulo}</p>
+                        <p class="card-description-short">${course.descricaoCurta}</p>
+                        <ul class="card-details">
+                            <li><strong>Dia:</strong> <span>${course.detalhes.dia}</span></li>
+                            <li><strong>Horário:</strong> <span>${course.detalhes.horario}</span></li>
+                            <li><strong>Idade:</strong> <span>${course.detalhes.idade_min} a ${course.detalhes.idade_max} anos</span></li>
+                            <li><strong>Professor:</strong> <span>${course.detalhes.professor}</span></li>
+                            <li><strong>Preço Mensal:</strong> <span class="course-price">${priceCalculator.formatCurrency(referencePrice)}</span></li>
+                            ${course.vagasDisponiveis !== undefined ? `<li><strong>Vagas:</strong> <span>${course.vagasDisponiveis === 0 ? '<span class="esgotado">Esgotado</span>' : course.vagasDisponiveis}</span></li>` : ''}
+                            ${course.detalhes.quantidade_minima_alunos !== undefined ? `<li><strong>Mín. Alunos:</strong> <span>${course.detalhes.quantidade_minima_alunos}</span></li>` : ''}
+                        </ul>
+                        <div class="card-actions">
+                            <button type="button" class="btn-detalhes" data-course-id="${course.id}">Ver Mais Detalhes</button>
+                            <button type="button" class="btn btn-selecionar" data-course-id="${course.id}" aria-pressed="false">Selecionar</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            $cursosGridContainer.append(cardHtml);
+        });
+    }
 
 // Função para exibir um modal com detalhes completos do curso
 function showCourseDetailsModal(course) {
@@ -823,6 +918,7 @@ $(document).on('keydown', function(e) {
 
 
 });
+
 
 
 
