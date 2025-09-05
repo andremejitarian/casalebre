@@ -249,14 +249,14 @@ function attachCourseCardEventListeners() {
         });
     });
 
-    // Listener delegado para botões "Ver Mais Detalhes"
-    $('#cursosGridContainer').on('click', '.btn-ver-mais', function() {
-        const courseId = $(this).data('course-id');
-        const course = allCoursesData.find(c => c.id === courseId);
-        if (course) {
-            showCourseDetailsModal(course);
-        }
-    });
+// Listener delegado para botões "Ver Mais Detalhes"
+$('#cursosGridContainer').on('click', '.btn-detalhes', function() {
+    const courseId = $(this).data('course-id');
+    const course = allCoursesData.find(c => c.id === courseId);
+    if (course) {
+        showCourseDetailsModal(course);
+    }
+});
 
         // Tornar o wrapper do checkbox clicável: alterna o estado do input e dispara change
         $('#cursosGridContainer').on('click', '.curso-checkbox-wrapper, .curso-checkbox-custom', function(e) {
@@ -823,6 +823,7 @@ $(document).on('keydown', function(e) {
 
 
 });
+
 
 
 
