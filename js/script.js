@@ -115,30 +115,111 @@ $(document).ready(function() {
         // O `contraturnosContainer` foi removido do HTML.
     }
 
-    // Função para exibir um modal com detalhes completos do curso (NOVA FUNÇÃO)
-    function showCourseDetailsModal(course) {
-        let detailsHtml = `
-            <h3>${course.nome} - ${course.subtitulo}</h3>
-            <p>${course.descricaoCompleta}</p>
-            <ul>
-                <li><strong>Dia:</strong> ${course.detalhes.dia}</li>
-                <li><strong>Horário:</strong> ${course.detalhes.horario}</li>
-                <li><strong>Professor:</strong> ${course.detalhes.professor}</li>
-                <li><strong>Contato Prof.:</strong> ${course.detalhes.professor_contato_tel}</li>
-                <li><strong>Aulas:</strong> ${course.detalhes.aulas_quantidade} (${course.detalhes.aulas_datas})</li>
-                <li><strong>Carga Horária:</strong> ${course.detalhes.carga_horaria_total}</li>
-                <li><strong>Período:</strong> ${course.detalhes.data_inicio} a ${course.detalhes.data_termino}</li>
-                <li><strong>Duração por Aula:</strong> ${course.detalhes.duracao_aula_horas}h</li>
-                <li><strong>Material:</strong> ${course.detalhes.material}</li>
-                <li><strong>Idade:</strong> ${course.detalhes.idade_min} a ${course.detalhes.idade_max} anos</li>
-                <li><strong>Vagas Disponíveis:</strong> ${course.vagasDisponiveis === 0 ? 'Esgotado' : course.vagasDisponiveis}</li>
-                <li><strong>Mínimo Alunos:</strong> ${course.detalhes.quantidade_minima_alunos}</li>
-                <li><strong>Preço Mensal:</strong> ${priceCalculator.formatCurrency(course.precos.mensal)}</li>
-            </ul>
-        `;
-        // POR ENQUANTO, APENAS UM ALERT. VOCÊ PODE SUBSTITUIR POR UM MODAL COM HTML E CSS.
-        alert(detailsHtml);
-    }
+// Função para exibir um modal com detalhes completos do curso
+function showCourseDetailsModal(course) {
+    // Determina se as vagas estão esgotadas
+    const vagasEsgotadas = course.vagasDisponiveis === 0;
+    const vagasTexto = vagasEsgotadas ? 
+        '<span class="esgotado">Esgotado</span>' : 
+        `<span class="vagas-disponiveis">${course.vagasDisponiveis}</span>`;
+
+    const detailsHtml = `
+        <div class="course-details">
+            <div class="course-description">${course.descricaoCompleta}</div>
+            
+            <div class="detail-section">
+                <div class="detail-section-title">📅 Informações do Curso</div>
+                <div class="details-grid">
+                    <div class="detail-item time-item">
+                        <strong>Dia da Semana:</strong>
+                        <span>${course.detalhes.dia}</span>
+                    </div>
+                    <div class="detail-item time-item">
+                        <strong>Horário:</strong>
+                        <span>${course.detalhes.horario}</span>
+                    </div>
+                    <div class="detail-item time-item">
+                        <strong>Período do Curso:</strong>
+                        <span>${course.detalhes.data_inicio} a ${course.detalhes.data_termino}</span>
+                    </div>
+                    <div class="detail-item highlight">
+                        <strong>Total de Aulas:</strong>
+                        <span>${course.detalhes.aulas_quantidade} aulas</span>
+                    </div>
+                    <div class="detail-item highlight">
+                        <strong>Carga Horária Total:</strong>
+                        <span>${course.detalhes.carga_horaria_total}</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Duração por Aula:</strong>
+                        <span>${course.detalhes.duracao_aula_horas}h</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title">👨‍🏫 Professor e Contato</div>
+                <div class="details-grid">
+                    <div class="detail-item professor-item">
+                        <strong>Professor(a):</strong>
+                        <span>${course.detalhes.professor}</span>
+                    </div>
+                    <div class="detail-item professor-item">
+                        <strong>Contato do Professor:</strong>
+                        <span>${course.detalhes.professor_contato_tel}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title">🎯 Detalhes Importantes</div>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <strong>Faixa Etária:</strong>
+                        <span>${course.detalhes.idade_min} a ${course.detalhes.idade_max} anos</span>
+                    </div>
+                    <div class="detail-item ${vagasEsgotadas ? 'vagas-item esgotado' : 'vagas-item'}">
+                        <strong>Vagas Disponíveis:</strong>
+                        ${vagasTexto}
+                    </div>
+                    <div class="detail-item">
+                        <strong>Mínimo de Alunos:</strong>
+                        <span>${course.detalhes.quantidade_minima_alunos} alunos</span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Material Necessário:</strong>
+                        <span>${course.detalhes.material}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title">💰 Valores</div>
+                <div class="details-grid">
+                    <div class="detail-item price-item">
+                        <strong>Preço Mensal:</strong>
+                        <span class="course-price">${priceCalculator.formatCurrency(course.precos.mensal)}</span>
+                    </div>
+                    <div class="detail-item price-item">
+                        <strong>Preço Bimestral:</strong>
+                        <span class="course-price">${priceCalculator.formatCurrency(course.precos.bimestral)}</span>
+                    </div>
+                    <div class="detail-item price-item">
+                        <strong>Preço Quadrimestral:</strong>
+                        <span class="course-price">${priceCalculator.formatCurrency(course.precos.quadrimestral)}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Atualiza o conteúdo do modal
+    $('#modalTitle').text(`${course.nome} - ${course.subtitulo}`);
+    $('#modalBody').html(detailsHtml);
+    
+    // Exibe o modal com animação
+    $('#courseModal').fadeIn(300);
+}
 
     // Função para anexar event listeners específicos aos cards de cursos (NOVA FUNÇÃO)
 function attachCourseCardEventListeners() {
@@ -718,6 +799,27 @@ function validateCourseSelection() {
         // Anexar event listeners para os cards de cursos
         attachCourseCardEventListeners();
 
+// Event listeners para o modal (ADICIONAR NO FINAL DA FUNÇÃO setupEventListeners)
+$('#courseModal').on('click', '.modal-close', function(e) {
+    e.preventDefault();
+    $('#courseModal').fadeOut(300);
+});
+
+// Fechar modal clicando no fundo escuro
+$('#courseModal').on('click', function(e) {
+    if (e.target === this) {
+        $('#courseModal').fadeOut(300);
+    }
+});
+
+// Fechar modal com a tecla ESC
+$(document).on('keydown', function(e) {
+    if (e.key === 'Escape' && $('#courseModal').is(':visible')) {
+        $('#courseModal').fadeOut(300);
+    }
+});
+
+
         console.log('Event listeners configurados com sucesso!');
     }
 
@@ -725,4 +827,5 @@ function validateCourseSelection() {
 
 
 });
+
 
