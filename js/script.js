@@ -65,55 +65,51 @@ $(document).ready(function() {
         $('html, body').animate({ scrollTop: 0 }, 500);
     }
 
-    // Popula a seleção de cursos (REESCRITO PARA CARDS)
-    function populateCourseSelection() {
-        const $cursosGridContainer = $('#cursosGridContainer');
-        $cursosGridContainer.empty(); // Limpa a mensagem "Carregando cursos..." ou conteúdo antigo
+// Popula a seleção de cursos (REESCRITO PARA CARDS)
+function populateCourseSelection() {
+    const $cursosGridContainer = $('#cursosGridContainer');
+    $cursosGridContainer.empty(); // Limpa a mensagem "Carregando cursos..." ou conteúdo antigo
 
-        if (allCoursesData.length === 0) {
-            $cursosGridContainer.html('<p class="error-message">Nenhum curso disponível no momento.</p>');
-            return;
-        }
+    if (allCoursesData.length === 0) {
+        $cursosGridContainer.html('<p class="error-message">Nenhum curso disponível no momento.</p>');
+        return;
+    }
 
-        allCoursesData.forEach(course => {
-            const referencePrice = course.precos.mensal; // Preço de referência para exibição no card
-        const cardHtml = `
-        <div class="curso-card" data-course-id="${course.id}" role="radio" tabindex="0" aria-checked="false">
-                    <!-- Novo wrapper para o checkbox personalizado -->
-                    <div class="curso-checkbox-wrapper">
-            <input type="radio" id="curso-${course.id}" name="cursoSelection" value="${course.id}" class="curso-checkbox-input" aria-label="Selecionar curso ${course.nome}">
-            <span class="curso-checkbox-custom radio-visual" role="presentation" aria-hidden="true"></span>
-                    </div>
-                    <div class="card-header">
-                        <img src="${course.imagem}" alt="${course.nome}" class="card-image">
-                    </div>
-                    <div class="card-body">
-                        <h3 class="card-title">${course.nome}</h3>
-                        <p class="card-subtitle">${course.subtitulo}</p>
-                        <p class="card-description-short">${course.descricaoCurta}</p>
-                        <ul class="card-details">
-                            <li><strong>Dia:</strong> <span>${course.detalhes.dia}</span></li>
-                            <li><strong>Horário:</strong> <span>${course.detalhes.horario}</span></li>
-                            <li><strong>Idade:</strong> <span>${course.detalhes.idade_min} a ${course.detalhes.idade_max} anos</span></li>
-                            <li><strong>Professor:</strong> <span>${course.detalhes.professor}</span></li>
-                            <li><strong>Preço Mensal:</strong> <span class="course-price">${priceCalculator.formatCurrency(referencePrice)}</span></li>
-                            ${course.vagasDisponiveis !== undefined ? `<li><strong>Vagas:</strong> <span>${course.vagasDisponiveis === 0 ? '<span class="esgotado">Esgotado</span>' : course.vagasDisponiveis}</span></li>` : ''}
-                            ${course.detalhes.quantidade_minima_alunos !== undefined ? `<li><strong>Mín. Alunos:</strong> <span>${course.detalhes.quantidade_minima_alunos}</span></li>` : ''}
-                        </ul>
-                        <div class="card-actions">
-                            <button type="button" class="btn-ver-mais" data-course-id="${course.id}">Ver Mais Detalhes</button>
-                            <button type="button" class="btn btn-ver-mais btn-selecionar" data-course-id="${course.id}" aria-pressed="false">Selecionar</button>
-                        </div>
+    allCoursesData.forEach(course => {
+        const referencePrice = course.precos.mensal; // Preço de referência para exibição no card
+    const cardHtml = `
+    <div class="curso-card" data-course-id="${course.id}" role="radio" tabindex="0" aria-checked="false">
+                <!-- Novo wrapper para o checkbox personalizado -->
+                <div class="curso-checkbox-wrapper">
+        <input type="radio" id="curso-${course.id}" name="cursoSelection" value="${course.id}" class="curso-checkbox-input" aria-label="Selecionar curso ${course.nome}">
+        <span class="curso-checkbox-custom radio-visual" role="presentation" aria-hidden="true"></span>
+                </div>
+                <div class="card-header">
+                    <img src="${course.imagem}" alt="${course.nome}" class="card-image">
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">${course.nome}</h3>
+                    <p class="card-subtitle">${course.subtitulo}</p>
+                    <p class="card-description-short">${course.descricaoCurta}</p>
+                    <ul class="card-details">
+                        <li><strong>Dia:</strong> <span>${course.detalhes.dia}</span></li>
+                        <li><strong>Horário:</strong> <span>${course.detalhes.horario}</span></li>
+                        <li><strong>Idade:</strong> <span>${course.detalhes.idade_min} a ${course.detalhes.idade_max} anos</span></li>
+                        <li><strong>Professor:</strong> <span>${course.detalhes.professor}</span></li>
+                        <li><strong>Preço Mensal:</strong> <span class="course-price">${priceCalculator.formatCurrency(referencePrice)}</span></li>
+                        ${course.vagasDisponiveis !== undefined ? `<li><strong>Vagas:</strong> <span>${course.vagasDisponiveis === 0 ? '<span class="esgotado">Esgotado</span>' : course.vagasDisponiveis}</span></li>` : ''}
+                        ${course.detalhes.quantidade_minima_alunos !== undefined ? `<li><strong>Mín. Alunos:</strong> <span>${course.detalhes.quantidade_minima_alunos}</span></li>` : ''}
+                    </ul>
+                    <div class="card-actions">
+                        <button type="button" class="btn-detalhes" data-course-id="${course.id}">Ver Mais Detalhes</button>
+                        <button type="button" class="btn btn-selecionar" data-course-id="${course.id}" aria-pressed="false">Selecionar</button>
                     </div>
                 </div>
-            `;
-            $cursosGridContainer.append(cardHtml);
-        });
-        
-        // No lugar de $cursosContainer.append(checkboxHtml);
-        // Não é mais necessário separar em cursos e contraturnos, todos vão para o mesmo grid.
-        // O `contraturnosContainer` foi removido do HTML.
-    }
+            </div>
+        `;
+        $cursosGridContainer.append(cardHtml);
+    });
+}
 
 // Função para exibir um modal com detalhes completos do curso
 function showCourseDetailsModal(course) {
@@ -827,5 +823,6 @@ $(document).on('keydown', function(e) {
 
 
 });
+
 
 
