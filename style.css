@@ -1219,9 +1219,9 @@ body {
 .modal-content {
     background: white;
     border-radius: 12px;
-    max-width: 600px;
+    max-width: 650px;
     width: 100%;
-    max-height: 80vh;
+    max-height: 85vh;
     overflow-y: auto;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     animation: modalSlideIn 0.3s ease-out;
@@ -1240,18 +1240,18 @@ body {
 }
 
 .modal-header {
-    padding: 20px 24px 0;
+    padding: 25px 30px 15px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 20px;
+    border-bottom: 2px solid #eee;
+    margin-bottom: 0;
 }
 
 .modal-header h3 {
     margin: 0;
     color: var(--text-color);
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 600;
     line-height: 1.3;
     flex: 1;
@@ -1261,12 +1261,12 @@ body {
 .modal-close {
     background: none;
     border: none;
-    font-size: 24px;
+    font-size: 28px;
     cursor: pointer;
     color: #666;
     padding: 5px;
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1282,7 +1282,7 @@ body {
 }
 
 .modal-body {
-    padding: 0 24px 24px;
+    padding: 20px 30px 30px;
 }
 
 /* Estilos para o conteúdo dos detalhes do curso */
@@ -1291,64 +1291,146 @@ body {
 }
 
 .course-description {
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: 1.05rem;
+    line-height: 1.7;
     margin-bottom: 25px;
     color: var(--text-color);
-    padding: 15px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 10px;
     border-left: 4px solid var(--primary-color);
+    font-style: italic;
 }
 
 .details-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 8px;
 }
 
 .detail-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 15px;
+    padding: 14px 18px;
     background-color: #fdfdfd;
     border: 1px solid #eee;
     border-radius: 8px;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .detail-item:hover {
     background-color: #f8f9fa;
+    border-color: #ddd;
+    transform: translateX(3px);
 }
 
 .detail-item strong {
     color: var(--text-color);
     font-weight: 600;
-    min-width: 120px;
+    min-width: 140px;
     text-align: left;
+    font-size: 0.95rem;
 }
 
 .detail-item span {
     color: var(--text-color-light);
     text-align: right;
     flex: 1;
+    font-size: 0.95rem;
 }
+
+/* Estilos específicos para diferentes tipos de informação */
 
 /* Destaque especial para o preço */
-.detail-item:has(.course-price),
-.detail-item .course-price {
-    color: var(--primary-color);
-    font-weight: 600;
-    font-size: 1.1em;
+.detail-item.price-item {
+    background: linear-gradient(135deg, #fff5f5, #ffe6e6);
+    border-color: var(--primary-color-light);
 }
 
-/* Destaque para vagas esgotadas */
+.detail-item .course-price {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 1.2em;
+}
+
+/* Destaque para informações importantes */
+.detail-item.highlight {
+    background: linear-gradient(135deg, #f0f8ff, #e6f3ff);
+    border-color: #4a90e2;
+}
+
+.detail-item.highlight strong {
+    color: #2c5aa0;
+}
+
+/* Destaque para vagas */
+.detail-item.vagas-item {
+    background: linear-gradient(135deg, #f0fff4, #e6ffe6);
+    border-color: #28a745;
+}
+
+.detail-item.vagas-item.esgotado {
+    background: linear-gradient(135deg, #fff5f5, #ffe6e6);
+    border-color: #dc3545;
+}
+
 .detail-item .esgotado {
     color: #dc3545;
     font-weight: bold;
     text-transform: uppercase;
     font-size: 0.9em;
+}
+
+.detail-item .vagas-disponiveis {
+    color: #28a745;
+    font-weight: 600;
+}
+
+/* Estilo para horários e datas */
+.detail-item.time-item strong {
+    color: #6f42c1;
+}
+
+.detail-item.time-item span {
+    color: #6f42c1;
+    font-weight: 500;
+}
+
+/* Estilo para professor */
+.detail-item.professor-item {
+    background: linear-gradient(135deg, #fff8e1, #ffecb3);
+    border-color: #ffc107;
+}
+
+.detail-item.professor-item strong {
+    color: #8a6914;
+}
+
+.detail-item.professor-item span {
+    color: #8a6914;
+    font-weight: 500;
+}
+
+/* Separadores visuais */
+.detail-section {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #ddd;
+}
+
+.detail-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.detail-section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* Responsividade do modal */
@@ -1364,23 +1446,28 @@ body {
     }
     
     .modal-header {
-        padding: 15px 20px 0;
+        padding: 20px 25px 15px;
     }
     
     .modal-header h3 {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
     }
     
     .modal-body {
-        padding: 0 20px 20px;
+        padding: 15px 25px 25px;
+    }
+    
+    .course-description {
+        padding: 15px;
+        font-size: 1rem;
     }
     
     .details-grid {
-        gap: 10px;
+        gap: 6px;
     }
     
     .detail-item {
-        padding: 10px 12px;
+        padding: 12px 15px;
         flex-direction: column;
         align-items: flex-start;
         gap: 5px;
@@ -1402,24 +1489,29 @@ body {
     }
     
     .modal-header {
-        padding: 12px 15px 0;
+        padding: 15px 20px 10px;
     }
     
     .modal-header h3 {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
     }
     
     .modal-body {
-        padding: 0 15px 15px;
+        padding: 10px 20px 20px;
     }
     
     .course-description {
-        padding: 12px;
+        padding: 15px;
         font-size: 0.95rem;
     }
     
     .detail-item {
-        padding: 8px 10px;
+        padding: 10px 12px;
+    }
+    
+    .detail-item strong,
+    .detail-item span {
+        font-size: 0.9rem;
     }
 }
 
@@ -1442,3 +1534,34 @@ body {
 .modal-content::-webkit-scrollbar-thumb:hover {
     background-color: var(--primary-color-dark);
 }
+
+/* Animação de entrada para os itens de detalhe */
+.detail-item {
+    animation: slideInLeft 0.3s ease-out;
+    animation-fill-mode: both;
+}
+
+.detail-item:nth-child(1) { animation-delay: 0.1s; }
+.detail-item:nth-child(2) { animation-delay: 0.15s; }
+.detail-item:nth-child(3) { animation-delay: 0.2s; }
+.detail-item:nth-child(4) { animation-delay: 0.25s; }
+.detail-item:nth-child(5) { animation-delay: 0.3s; }
+.detail-item:nth-child(6) { animation-delay: 0.35s; }
+.detail-item:nth-child(7) { animation-delay: 0.4s; }
+.detail-item:nth-child(8) { animation-delay: 0.45s; }
+.detail-item:nth-child(9) { animation-delay: 0.5s; }
+.detail-item:nth-child(10) { animation-delay: 0.55s; }
+.detail-item:nth-child(11) { animation-delay: 0.6s; }
+.detail-item:nth-child(12) { animation-delay: 0.65s; }
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
